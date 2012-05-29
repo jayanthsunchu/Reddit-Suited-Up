@@ -12,12 +12,6 @@ import android.view.View.OnTouchListener;
 import android.widget.PopupWindow;
 import android.content.Context;
 
-/**
- * Custom popup window.
- * 
- * @author Lorensius W. L. T <lorenz@londatiga.net>
- *
- */
 public class PopupWindows {
 	protected Context mContext;
 	protected PopupWindow mWindow;
@@ -25,11 +19,7 @@ public class PopupWindows {
 	protected Drawable mBackground = null;
 	protected WindowManager mWindowManager;
 
-	/**
-	 * Constructor.
-	 * 
-	 * @param context Context
-	 */
+	
 	public PopupWindows(Context context) {
 		mContext	= context;
 		mWindow 	= new PopupWindow(context);
@@ -50,21 +40,15 @@ public class PopupWindows {
 		mWindowManager = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
 	}
 
-	/**
-	 * On dismiss
-	 */
+	
 	protected void onDismiss() {		
 	}
 
-	/**
-	 * On show
-	 */
+	
 	protected void onShow() {		
 	}
 
-	/**
-	 * On pre show
-	 */
+	
 	protected void preShow() {
 		if (mRootView == null) 
 			throw new IllegalStateException("setContentView was not called with a view to display.");
@@ -85,49 +69,31 @@ public class PopupWindows {
 		mWindow.setContentView(mRootView);
 	}
 
-	/**
-	 * Set background drawable.
-	 * 
-	 * @param background Background drawable
-	 */
+	
 	public void setBackgroundDrawable(Drawable background) {
 		mBackground = background;
 	}
 
-	/**
-	 * Set content view.
-	 * 
-	 * @param root Root view
-	 */
+	
 	public void setContentView(View root) {
 		mRootView = root;
 
 		mWindow.setContentView(root);
 	}
 
-	/**
-	 * Set content view.
-	 * 
-	 * @param layoutResID Resource id
-	 */
+	
 	public void setContentView(int layoutResID) {
 		LayoutInflater inflator = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
 		setContentView(inflator.inflate(layoutResID, null));
 	}
 
-	/**
-	 * Set listener on window dismissed.
-	 * 
-	 * @param listener
-	 */
+	
 	public void setOnDismissListener(PopupWindow.OnDismissListener listener) {
 		mWindow.setOnDismissListener(listener);  
 	}
 
-	/**
-	 * Dismiss the popup window.
-	 */
+	
 	public void dismiss() {
 		mWindow.dismiss();
 	}

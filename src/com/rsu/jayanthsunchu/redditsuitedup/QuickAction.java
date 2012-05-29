@@ -26,14 +26,6 @@ import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
-/**
- * QuickAction dialog, shows action list as icon and text like the one in
- * Gallery3D app. Currently supports vertical and horizontal layout.
- * 
- * @author Lorensius W. L. T <lorenz@londatiga.net>
- * 
- *         Contributors: - Kevin Peck <kevinwpeck@gmail.com>
- */
 public class QuickAction extends PopupWindows implements OnDismissListener {
 	private View mRootView;
 	private ImageView mArrowUp;
@@ -70,12 +62,7 @@ public class QuickAction extends PopupWindows implements OnDismissListener {
 	public int listViewPosition = -1;
 	ArrayList<HashMap<String, String>> aList = new ArrayList<HashMap<String, String>>();
 
-	/**
-	 * Constructor for default vertical layout
-	 * 
-	 * @param context
-	 *            Context
-	 */
+	
 	public QuickAction(Context context) {
 		this(context, VERTICAL, false);
 	}
@@ -139,14 +126,7 @@ public class QuickAction extends PopupWindows implements OnDismissListener {
 
 	};
 
-	/**
-	 * Constructor allowing orientation override
-	 * 
-	 * @param context
-	 *            Context
-	 * @param orientation
-	 *            Layout orientation, can be vertical or horizontal
-	 */
+	
 	public QuickAction(Context context, int orientation, boolean commentView) {
 		super(context);
 
@@ -168,24 +148,12 @@ public class QuickAction extends PopupWindows implements OnDismissListener {
 		mChildPos = 0;
 	}
 
-	/**
-	 * Get action item at an index
-	 * 
-	 * @param index
-	 *            Index of item (position from callback)
-	 * 
-	 * @return Action Item at the position
-	 */
+	
 	public ActionItem getActionItem(int index) {
 		return actionItems.get(index);
 	}
 
-	/**
-	 * Set root view.
-	 * 
-	 * @param id
-	 *            Layout resource id
-	 */
+	
 	public void setRootViewId(int id) {
 		mRootView = (ViewGroup) mInflater.inflate(id, null);
 		mTrack = (ViewGroup) mRootView.findViewById(R.id.tracks);
@@ -195,44 +163,25 @@ public class QuickAction extends PopupWindows implements OnDismissListener {
 
 		mScroller = (ScrollView) mRootView.findViewById(R.id.scroller);
 
-		// mListView = (ListView) mRootView.findViewById(R.id.linkList);
-
-		// This was previously defined on show() method, moved here to prevent
-		// force close that occured
-		// when tapping fastly on a view to show quickaction dialog.
-		// Thanx to zammbi (github.com/zammbi)
+		
+		
 		mRootView.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT,
 				LayoutParams.WRAP_CONTENT));
 
 		setContentView(mRootView);
 	}
 
-	/**
-	 * Set animation style
-	 * 
-	 * @param mAnimStyle
-	 *            animation style, default is set to ANIM_AUTO
-	 */
+	
 	public void setAnimStyle(int mAnimStyle) {
 		this.mAnimStyle = mAnimStyle;
 	}
 
-	/**
-	 * Set listener for action item clicked.
-	 * 
-	 * @param listener
-	 *            Listener
-	 */
+	
 	public void setOnActionItemClickListener(OnActionItemClickListener listener) {
 		mItemClickListener = listener;
 	}
 
-	/**
-	 * Add action item
-	 * 
-	 * @param action
-	 *            {@link ActionItem}
-	 */
+	
 	public void addActionItem(ActionItem action) {
 		actionItems.add(action);
 
@@ -326,11 +275,7 @@ public class QuickAction extends PopupWindows implements OnDismissListener {
 		return idForOperation;
 	}
 
-	/**
-	 * Show quickaction popup. Popup is automatically positioned, on top or
-	 * bottom of anchor view.
-	 * 
-	 */
+	
 	public void show(View anchor) {
 
 		preShow();
@@ -360,7 +305,7 @@ public class QuickAction extends PopupWindows implements OnDismissListener {
 		int screenWidth = mWindowManager.getDefaultDisplay().getWidth();
 		int screenHeight = mWindowManager.getDefaultDisplay().getHeight();
 
-		// automatically get X coord of popup (top left)
+		
 		if ((anchorRect.left + rootWidth) > screenWidth) {
 			xPos = anchorRect.left - (rootWidth - anchor.getWidth());
 			xPos = (xPos < 0) ? 0 : xPos;
@@ -408,17 +353,7 @@ public class QuickAction extends PopupWindows implements OnDismissListener {
 		mWindow.showAtLocation(anchor, Gravity.NO_GRAVITY, xPos, yPos);
 	}
 
-	/**
-	 * Set animation style
-	 * 
-	 * @param screenWidth
-	 *            screen width
-	 * @param requestedX
-	 *            distance from left edge
-	 * @param onTop
-	 *            flag to indicate where the popup should be displayed. Set TRUE
-	 *            if displayed on top of anchor view and vice versa
-	 */
+	
 	private void setAnimationStyle(int screenWidth, int requestedX,
 			boolean onTop) {
 		int arrowPos = requestedX - mArrowUp.getMeasuredWidth() / 2;
@@ -461,14 +396,7 @@ public class QuickAction extends PopupWindows implements OnDismissListener {
 		}
 	}
 
-	/**
-	 * Show arrow
-	 * 
-	 * @param whichArrow
-	 *            arrow type resource id
-	 * @param requestedX
-	 *            distance from left screen
-	 */
+	
 	private void showArrow(int whichArrow, int requestedX) {
 		final View showArrow = (whichArrow == R.id.arrow_up) ? mArrowUp
 				: mArrowDown;
@@ -490,11 +418,7 @@ public class QuickAction extends PopupWindows implements OnDismissListener {
 			hideArrow.setVisibility(View.INVISIBLE);
 	}
 
-	/**
-	 * Set listener for window dismissed. This listener will only be fired if
-	 * the quicakction dialog is dismissed by clicking outside the dialog or
-	 * clicking on sticky item.
-	 */
+	
 	public void setOnDismissListener(QuickAction.OnDismissListener listener) {
 		setOnDismissListener(this);
 
@@ -508,19 +432,13 @@ public class QuickAction extends PopupWindows implements OnDismissListener {
 		}
 	}
 
-	/**
-	 * Listener for item click
-	 * 
-	 */
+	
 	public interface OnActionItemClickListener {
 		public abstract void onItemClick(QuickAction source, int pos,
 				int actionId);
 	}
 
-	/**
-	 * Listener for window dismiss
-	 * 
-	 */
+	
 	public interface OnDismissListener {
 		public abstract void onDismiss();
 	}

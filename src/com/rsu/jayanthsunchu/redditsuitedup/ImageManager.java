@@ -32,11 +32,10 @@ public class ImageManager {
 	private int MAX_IMAGE_SIZE = 1600;
 
 	public ImageManager(Context context) {
-		// Make background thread low priority, to avoid affecting UI
-		// performance
+		
 		imageLoaderThread.setPriority(Thread.NORM_PRIORITY - 1);
 
-		// Find the dir to save cached images
+		
 		String sdState = android.os.Environment.getExternalStorageState();
 		if (sdState.equals(android.os.Environment.MEDIA_MOUNTED)) {
 			File sdDir = android.os.Environment.getExternalStorageDirectory();
@@ -71,8 +70,7 @@ public class ImageManager {
 	}
 
 	private void queueImage(String url, Activity activity, ImageView imageView) {
-		// This ImageView might have been used for other images, so we clear
-		// the queue of old tasks before starting.
+		
 		imageQueue.Clean(imageView);
 		ImageRef p = new ImageRef(imageView.getTag().toString(), imageView);
 
@@ -81,7 +79,7 @@ public class ImageManager {
 			imageQueue.imageRefs.notifyAll();
 		}
 
-		// Start thread if it's not started yet
+		
 		if (imageLoaderThread.getState() == Thread.State.NEW)
 			imageLoaderThread.start();
 	}
@@ -90,12 +88,12 @@ public class ImageManager {
 		String filename = String.valueOf(url.hashCode());
 		File f = new File(cacheDir, filename);
 
-		// Is the bitmap in our cache?
+		
 		Bitmap bitmap = BitmapFactory.decodeFile(f.getPath());
 		if (bitmap != null)
 			return bitmap;
 
-		// Nope, have to download it
+		
 		try {
 
 			BitmapFactory.Options opts = new BitmapFactory.Options();
@@ -116,7 +114,7 @@ public class ImageManager {
 			opts2.inPurgeable = true;
 			bitmap = BitmapFactory.decodeStream(new URL(url).openConnection()
 					.getInputStream(), null, opts2);
-			// save bitmap to cache for later
+			
 			float scalingFactor = (float) displayWidth
 					/ (float) bitmap.getWidth();
 			int scaleWidth = (int) (bitmap.getWidth() * scalingFactor);
@@ -153,7 +151,7 @@ public class ImageManager {
 		}
 	}
 
-	/** Classes **/
+	
 
 	private class ImageRef {
 		public String url;
@@ -165,11 +163,11 @@ public class ImageManager {
 		}
 	}
 
-	// stores list of images to download
+	
 	private class ImageQueue {
 		private Stack<ImageRef> imageRefs = new Stack<ImageRef>();
 
-		// removes all instances of this ImageView
+		
 		public void Clean(ImageView view) {
 
 			for (int i = 0; i < imageRefs.size();) {
@@ -186,15 +184,14 @@ public class ImageManager {
 		public void run() {
 			try {
 				while (true) {
-					// Thread waits until there are images in the
-					// queue to be retrieved
+					
 					if (imageQueue.imageRefs.size() == 0) {
 						synchronized (imageQueue.imageRefs) {
 							imageQueue.imageRefs.wait();
 						}
 					}
 
-					// When we have images to be loaded
+					
 					if (imageQueue.imageRefs.size() != 0) {
 						ImageRef imageToLoad;
 
@@ -206,8 +203,7 @@ public class ImageManager {
 						// imageMap.put(imageToLoad.url, bmp);
 						Object tag = imageToLoad.imageView.getTag();
 
-						// Make sure we have the right view - thread safety
-						// defender
+						
 						if (tag != null
 								&& ((String) tag).equals(imageToLoad.url)) {
 							BitmapDisplayer bmpDisplayer = new BitmapDisplayer(
@@ -228,7 +224,7 @@ public class ImageManager {
 		}
 	}
 
-	// Used to display bitmap in the UI thread
+	
 	private class BitmapDisplayer implements Runnable {
 		Bitmap bitmap;
 		ImageView imageView;
