@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:orientation="horizontal" android:layout_width="fill_parent"
+	android:layout_height="fill_parent">
+	
+	<ListView android:id="@android:id/list" android:layout_width="wrap_content"
+		android:layout_height="fill_parent"
+		android:layout_marginTop="50dip"
+		android:layout_marginBottom="50dip"
+		android:fastScrollEnabled="true" />
+
+
+	<LinearLayout android:id="@+id/subRedditMenu"
+		android:orientation="horizontal" android:layout_width="fill_parent"
+		android:layout_alignParentTop="true" android:layout_height="50dip"
+		android:background="@color/headingbg">
+		<Button android:layout_width="wrap_content" android:background="@null"
+			android:layout_height="fill_parent" android:text="OPTIONS"
+			android:textColor="#fff" android:layout_weight="1" android:padding="15dip"
+			android:textStyle="bold" android:id="@+id/btnSubReddits"></Button>
+		<TextView android:id="@+id/txtTitle" android:layout_width="wrap_content"
+		android:layout_height="wrap_content" android:textStyle="bold"
+		android:padding="5dip" android:textColor="#fff"
+		android:background="@android:color/transparent"></TextView>
+		<Button android:layout_width="wrap_content" android:background="@null"
+			android:layout_height="fill_parent" android:text="SORT BY"
+			android:textColor="#fff" android:layout_gravity="right"
+			android:padding="15dip" android:textStyle="bold" android:id="@+id/btnSortBy"
+			android:layout_weight="1" />
+	</LinearLayout>
+	<LinearLayout android:id="@+id/subRedditP" android:layout_marginTop="50dip"
+		android:orientation="horizontal" android:layout_width="fill_parent"
+		android:layout_height="fill_parent" android:visibility="gone"
+		
+		android:layout_gravity="center_horizontal"
+		android:gravity="center_horizontal">
+	<ProgressBar android:layout_width="wrap_content" 
+				
+				style="@android:style/Widget.ProgressBar.Inverse"
+				android:layout_height="wrap_content"
+				android:id="@+id/loadingPostProgress"
+				
+	></ProgressBar>
+	</LinearLayout>
+	<LinearLayout android:id="@+id/actionBar"
+		android:orientation="horizontal" android:layout_width="fill_parent"
+		android:layout_alignParentBottom="true" android:layout_height="50dip"
+		android:background="@color/headingbg">
+		<ImageView android:layout_width="wrap_content"
+		    android:layout_height="wrap_content"
+		    android:layout_gravity="center_vertical"
+		    android:id="@+id/imgLoginAs"
+			android:layout_marginLeft="25dp"	
+		    android:layout_marginRight="25dp"
+		    android:scaleType="center"
+		    android:background="@drawable/login"/>
+		
+		<ImageView android:layout_width="wrap_content"
+		    android:layout_height="wrap_content"
+		    android:layout_marginLeft="25dp"	
+		    android:layout_marginRight="25dp"
+		    android:id="@+id/imgSettings"
+		    android:scaleType="center"
+		    android:layout_gravity="center_vertical"
+		    android:background="@drawable/settings"/>
+		
+		<ImageView android:layout_width="wrap_content"
+		    android:layout_height="wrap_content"
+		    android:layout_marginLeft="25dp"
+		    android:id="@+id/imgRefresh"	
+		    android:layout_marginRight="25dp"
+		    android:scaleType="center"
+		    android:layout_gravity="center_vertical"
+		    android:background="@drawable/refreshwhite"/>
+	</LinearLayout>
+</RelativeLayout>
+

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:orientation="horizontal" android:layout_width="match_parent"
+	android:layout_height="wrap_content" android:background="@drawable/linkliststates">
+	<TextView android:id="@+id/txtItem1" 
+	android:layout_width="fill_parent" 
+		android:textSize="14sp" android:layout_height="wrap_content" android:gravity="center_vertical"
+		android:textColor="#0000ff">
+	</TextView>
+</LinearLayout>

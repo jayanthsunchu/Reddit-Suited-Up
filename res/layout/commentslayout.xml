@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/commentlayer"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    
+    android:orientation="vertical" >
+
+    <LinearLayout
+        android:id="@+id/commentsLayoutProgress"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_gravity="center_horizontal"
+        
+        android:gravity="center_horizontal"
+        android:orientation="horizontal"
+        android:visibility="gone" >
+
+        <ProgressBar
+            android:id="@+id/loadingCommentsProgress"
+            style="@android:style/Widget.ProgressBar.Inverse"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:progressDrawable="@drawable/loading" >
+        </ProgressBar>
+    </LinearLayout>
+
+    <ListView
+        android:id="@+id/commentsListView"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:divider="@drawable/listitem_divider"
+        android:fastScrollEnabled="true"
+        android:dividerHeight="1dp" />
+
+</LinearLayout>

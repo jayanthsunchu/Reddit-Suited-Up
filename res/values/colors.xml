@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+     <color name="background">#55000000</color>
+     <color name="darkbg">#323232</color>
+     <color name="darkbgtext">#ffffff</color>
+     <color name="whitebg">#f5f5f5</color>
+     <color name="whitebgtext">#161616</color>
+     
+     <color name="quickactionbg">#484848</color>
+     <color name="headingbg">#363636</color>
+</resources>

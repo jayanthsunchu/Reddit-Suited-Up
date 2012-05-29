@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:orientation="vertical" android:background="#B8B8B8"
+	android:layout_width="fill_parent" android:layout_height="fill_parent">
+	<ListView android:id="@android:id/list" android:layout_width="wrap_content"
+		android:layout_height="fill_parent" android:divider="@drawable/listitem_divider"
+		android:dividerHeight="1px" android:layout_marginTop="70dip" />
+
+	<LinearLayout android:id="@+id/heading"
+		android:orientation="horizontal" android:layout_width="fill_parent"
+		android:layout_alignParentTop="true" android:layout_height="70dip"
+		android:background="@drawable/headinggradient"
+		>
+		<TextView android:id="@+id/txtProfile" android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:padding="5dip" android:textColor="#fff" 
+			android:background="@android:color/transparent"></TextView>
+	</LinearLayout>
+	<LinearLayout android:id="@+id/profileLoadP"
+		android:layout_marginTop="70dip" android:orientation="horizontal"
+		android:layout_width="fill_parent" android:layout_height="fill_parent"
+		android:visibility="gone" android:background="#c1c1c1"
+		android:layout_gravity="center_horizontal" android:gravity="center_horizontal">
+		<ProgressBar android:layout_width="wrap_content"
+
+			style="@android:style/Widget.ProgressBar.Inverse"
+			android:layout_height="wrap_content" android:progressDrawable="@drawable/loading"
+			android:id="@+id/profileProgress"></ProgressBar>
+	</LinearLayout>
+</RelativeLayout>

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <PreferenceCategory
+        android:key="rsuSettings"
+        android:title="Reddit Suited Up Settings" >
+        <CheckBoxPreference
+            android:defaultValue="false"
+            android:key="clicktogo"
+            android:summary="Enable or Disable click to open link"
+            android:title="Enable Click To Open Link" />
+        <CheckBoxPreference
+            android:defaultValue="false"
+            android:key="swipetovote"
+            android:summary="Enable or Disable swipe to vote(only available for links)"
+            android:title="Enable Swipe to Vote" />
+        
+        <CheckBoxPreference
+            android:defaultValue="false"
+            android:key="theme"
+            android:summary="Enable Dark Theme"
+            android:title="Enable Dark Theme" />
+    </PreferenceCategory>
+
+</PreferenceScreen>

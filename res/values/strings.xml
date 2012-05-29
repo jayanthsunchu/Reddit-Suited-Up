@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="hello">Hello World, FrontPageActivity!</string>
+    <string name="app_name">Reddit Suited Up</string>
+    <string name="logOutMenuItem">LURK(LOG-OUT)</string>
+    <string name="subRedditsMenuItem">R/SUBS</string>
+    <string name="refreshMenuItem">Refresh</string>
+    <string name="settingsMenuItem">CUSTOMIZE</string>
+    <string name="messagesMenuItem">MESSAGES</string>
+    <string name="profileMenuItem">PROFILE</string>
+    <string name="newTopicMenuItem">POST-A-LINK</string>
+    <string name="logInMenuItem">Log In</string>
+    <string name="sortPostsMenuItem">SORT-EM-UP</string>
+</resources>

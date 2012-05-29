@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="250dip"
+    android:layout_height="fill_parent"
+    style="@style/DarkTheme"
+    android:orientation="vertical" >
+
+    <TextView
+        android:id="@+id/txtUserName"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/mainmenugradient"
+        android:padding="10dip"
+        android:text=""
+        android:textColor="#000"
+        android:textStyle="bold" >
+    </TextView>
+
+    <LinearLayout
+        android:id="@+id/subMenu"
+        android:layout_width="fill_parent"
+        android:layout_height="50dip"
+        android:background="@drawable/headinggradient"
+        android:orientation="horizontal" >
+
+        <Button
+            android:id="@+id/btnProfile"
+            android:layout_width="wrap_content"
+            android:layout_height="fill_parent"
+            android:layout_weight="1"
+            android:background="@drawable/submenustates"
+            android:padding="10dip"
+            android:text="PROFILE"
+            android:textColor="#fff"
+            android:textStyle="bold" >
+        </Button>
+
+        <Button
+            android:id="@+id/btnInbox"
+            android:layout_width="wrap_content"
+            android:layout_height="fill_parent"
+            android:layout_gravity="right"
+            android:layout_weight="1"
+            android:background="@drawable/submenustates"
+            android:padding="10dip"
+            android:text="INBOX"
+            android:textColor="#fff"
+            android:textStyle="bold" />
+
+        <Button
+            android:id="@+id/btnSubmit"
+            android:layout_width="wrap_content"
+            android:layout_height="fill_parent"
+            android:layout_gravity="right"
+            android:layout_weight="1"
+            android:background="@drawable/submenustates"
+            android:padding="10dip"
+            android:text="SUBMIT"
+            android:textColor="#fff"
+            android:textStyle="bold" />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/favSubReddits"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/mainmenugradient"
+        android:padding="10dip"
+        android:text="frontpage"
+        android:textColor="#000"
+        android:textStyle="bold" >
+    </TextView>
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:background="#fff"
+        android:orientation="vertical" >
+
+        <TextView
+            android:id="@+id/subHeading1"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/mainmenugradient"
+            android:padding="10dip"
+            android:text="Search All Sub Reddits"
+            android:textColor="#000"
+            android:textStyle="bold" >
+        </TextView>
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="45dip"
+            android:orientation="horizontal" >
+
+            <AutoCompleteTextView
+                android:id="@+id/searchSubReddits"
+                android:layout_width="200dip"
+                android:layout_height="fill_parent"
+                android:layout_gravity="center_vertical"
+                android:background="#6E6E6E"
+                android:completionThreshold="1" >
+            </AutoCompleteTextView>
+
+            <Button
+                android:id="@+id/btnGo"
+                android:layout_width="50dip"
+                android:layout_height="fill_parent"
+                android:layout_gravity="center_vertical|right"
+                android:background="@drawable/submenustates"
+                android:gravity="right"
+                android:padding="10dip"
+                android:text="GO"
+                android:textColor="#fff"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/subHeading2"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/mainmenugradient"
+            android:padding="10dip"
+            android:text="Favorite Sub Reddits"
+            android:textColor="#000"
+            android:textStyle="bold" >
+        </TextView>
+
+        <LinearLayout
+            android:id="@+id/subRedditProgressBar"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_gravity="center_horizontal"
+            android:background="#C1C1C1"
+            android:gravity="center_horizontal"
+            android:orientation="horizontal"
+            android:visibility="gone" >
+
+            <ProgressBar
+                android:id="@+id/subProgress"
+                style="@android:style/Widget.ProgressBar.Inverse"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:background="#C1C1C1"
+                android:progressDrawable="@drawable/loading" >
+            </ProgressBar>
+        </LinearLayout>
+
+        <ListView
+            android:id="@+id/subRedditList"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:cacheColorHint="#00000000"
+            android:divider="@drawable/listitem_divider"
+            android:dividerHeight="1px" />
+    </LinearLayout>
+
+</LinearLayout>

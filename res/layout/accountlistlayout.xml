@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="fill_parent" android:orientation="horizontal"
+	
+	android:layout_height="wrap_content" android:background="@drawable/accountliststates">
+	<ImageView android:layout_width="wrap_content"
+		android:layout_gravity="center_vertical" android:layout_height="wrap_content"
+		android:background="@drawable/profile"></ImageView>
+	<TextView android:layout_width="wrap_content" android:id="@+id/txtAccountName"
+		android:layout_height="50dip" android:padding="5dp"
+		android:textSize="15sp" android:textStyle="bold" android:gravity="center_vertical"
+		android:textColor="#9B9B9B"></TextView>
+	<LinearLayout android:id="@+id/addDefaultLayout"
+		android:layout_width="wrap_content" android:layout_height="wrap_content"
+		android:layout_gravity="center_vertical">
+		<ImageView android:layout_width="wrap_content"
+			android:layout_gravity="center_vertical" android:layout_height="wrap_content"
+			android:background="@drawable/current"></ImageView>
+	</LinearLayout>
+</LinearLayout>

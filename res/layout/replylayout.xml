@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/scrollCommentLayout"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:background="#ffffff" >
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:background="#ffffff"
+        android:orientation="vertical" >
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/headinggradient"
+            android:orientation="vertical"
+            android:padding="10dip" >
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:text="REPLY"
+                android:textColor="#fff"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="5dip" >
+
+            <TextView
+                android:id="@+id/txtParentComment"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:textColor="#646464"
+                android:textSize="10sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="250dip"
+            android:orientation="horizontal"
+            android:padding="5dip" >
+
+            <EditText
+                android:id="@+id/commentField"
+                android:layout_width="fill_parent"
+                android:layout_height="250dip"
+                android:background="@drawable/edittextreplybg"
+                android:gravity="top"
+                android:hint="Enter Comment"
+                android:inputType="textMultiLine" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="10dip" >
+
+            <Button
+                android:id="@+id/submitComment"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/buttonstates"
+                android:padding="10dip"
+                android:text="Submit"
+                android:textColor="#fff"
+                android:textStyle="bold" />
+        </LinearLayout>
+    </LinearLayout>
+
+</ScrollView>
