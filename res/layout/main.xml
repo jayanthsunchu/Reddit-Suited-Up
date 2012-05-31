@@ -1,77 +1,167 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-	android:orientation="horizontal" android:layout_width="fill_parent"
-	android:layout_height="fill_parent">
-	
-	<ListView android:id="@android:id/list" android:layout_width="wrap_content"
-		android:layout_height="fill_parent"
-		android:layout_marginTop="50dip"
-		android:layout_marginBottom="50dip"
-		android:fastScrollEnabled="true" />
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="horizontal" >
 
+    <ListView
+        android:id="@android:id/list"
+        android:layout_width="wrap_content"
+        android:layout_height="fill_parent"
+        android:layout_above="@+id/actionBar"
+        android:layout_below="@+id/subRedditMenu"
+        android:fastScrollEnabled="true" />
 
-	<LinearLayout android:id="@+id/subRedditMenu"
-		android:orientation="horizontal" android:layout_width="fill_parent"
-		android:layout_alignParentTop="true" android:layout_height="50dip"
-		android:background="@color/headingbg">
-		<Button android:layout_width="wrap_content" android:background="@null"
-			android:layout_height="fill_parent" android:text="OPTIONS"
-			android:textColor="#fff" android:layout_weight="1" android:padding="15dip"
-			android:textStyle="bold" android:id="@+id/btnSubReddits"></Button>
-		<TextView android:id="@+id/txtTitle" android:layout_width="wrap_content"
-		android:layout_height="wrap_content" android:textStyle="bold"
-		android:padding="5dip" android:textColor="#fff"
-		android:background="@android:color/transparent"></TextView>
-		<Button android:layout_width="wrap_content" android:background="@null"
-			android:layout_height="fill_parent" android:text="SORT BY"
-			android:textColor="#fff" android:layout_gravity="right"
-			android:padding="15dip" android:textStyle="bold" android:id="@+id/btnSortBy"
-			android:layout_weight="1" />
-	</LinearLayout>
-	<LinearLayout android:id="@+id/subRedditP" android:layout_marginTop="50dip"
-		android:orientation="horizontal" android:layout_width="fill_parent"
-		android:layout_height="fill_parent" android:visibility="gone"
-		
-		android:layout_gravity="center_horizontal"
-		android:gravity="center_horizontal">
-	<ProgressBar android:layout_width="wrap_content" 
-				
-				style="@android:style/Widget.ProgressBar.Inverse"
-				android:layout_height="wrap_content"
-				android:id="@+id/loadingPostProgress"
-				
-	></ProgressBar>
-	</LinearLayout>
-	<LinearLayout android:id="@+id/actionBar"
-		android:orientation="horizontal" android:layout_width="fill_parent"
-		android:layout_alignParentBottom="true" android:layout_height="50dip"
-		android:background="@color/headingbg">
-		<ImageView android:layout_width="wrap_content"
-		    android:layout_height="wrap_content"
-		    android:layout_gravity="center_vertical"
-		    android:id="@+id/imgLoginAs"
-			android:layout_marginLeft="25dp"	
-		    android:layout_marginRight="25dp"
-		    android:scaleType="center"
-		    android:background="@drawable/login"/>
-		
-		<ImageView android:layout_width="wrap_content"
-		    android:layout_height="wrap_content"
-		    android:layout_marginLeft="25dp"	
-		    android:layout_marginRight="25dp"
-		    android:id="@+id/imgSettings"
-		    android:scaleType="center"
-		    android:layout_gravity="center_vertical"
-		    android:background="@drawable/settings"/>
-		
-		<ImageView android:layout_width="wrap_content"
-		    android:layout_height="wrap_content"
-		    android:layout_marginLeft="25dp"
-		    android:id="@+id/imgRefresh"	
-		    android:layout_marginRight="25dp"
-		    android:scaleType="center"
-		    android:layout_gravity="center_vertical"
-		    android:background="@drawable/refreshwhite"/>
-	</LinearLayout>
+    <LinearLayout
+        android:id="@+id/subRedditMenu"
+        android:layout_width="fill_parent"
+        android:layout_height="50dip"
+        android:layout_alignParentTop="true"
+        android:background="@color/headingbg"
+        android:orientation="horizontal" >
+
+        <Button
+            android:id="@+id/btnSubReddits"
+            android:layout_width="wrap_content"
+            android:layout_height="fill_parent"
+            android:layout_weight="1"
+            android:background="@null"
+            android:padding="15dip"
+            android:text="OPTIONS"
+            android:textColor="#fff"
+            android:textStyle="bold" >
+        </Button>
+
+        <TextView
+            android:id="@+id/txtTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@android:color/transparent"
+            android:padding="5dip"
+            android:textColor="#fff"
+            android:textStyle="bold" >
+        </TextView>
+
+        <Button
+            android:id="@+id/btnSortBy"
+            android:layout_width="wrap_content"
+            android:layout_height="fill_parent"
+            android:layout_gravity="right"
+            android:layout_weight="1"
+            android:background="@null"
+            android:padding="15dip"
+            android:text="SORT BY"
+            android:textColor="#fff"
+            android:textStyle="bold" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/subRedditP"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_gravity="center_horizontal"
+        android:gravity="center_horizontal"
+        android:orientation="horizontal"
+        android:paddingTop="50dip"
+        android:visibility="gone" >
+
+        <ProgressBar
+            android:id="@+id/loadingPostProgress"
+            style="@android:style/Widget.ProgressBar.Inverse"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" >
+        </ProgressBar>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/actionBar"
+        android:layout_width="fill_parent"
+        android:layout_height="50dp"
+        android:layout_alignParentBottom="true"
+        android:background="@color/headingbg"
+        android:orientation="horizontal" >
+
+        <ImageView
+            android:id="@+id/imgClose"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_gravity="center_vertical"
+            android:background="@color/headingbg"
+            android:scaleType="center"
+            android:src="@drawable/close" />
+
+        <ImageView
+            android:id="@+id/imgLoginAs"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_gravity="center_vertical"
+            android:background="@color/headingbg"
+            android:scaleType="center"
+            android:src="@drawable/login" />
+
+        <ImageView
+            android:id="@+id/imgSettings"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_gravity="center_vertical"
+            android:background="@color/headingbg"
+            android:scaleType="center"
+            android:src="@drawable/settings" />
+
+        <ImageView
+            android:id="@+id/imgRefresh"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_gravity="center_vertical"
+            android:background="@color/headingbg"
+            android:scaleType="center"
+            android:src="@drawable/refreshwhite" />
+        
+        <ImageView
+            android:id="@+id/imgUser"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_gravity="center_vertical"
+            android:background="@color/headingbg"
+            android:scaleType="center"
+            android:src="@drawable/profileaction" />
+        
+        <ImageView
+            android:id="@+id/imgSubmit"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_gravity="center_vertical"
+            android:background="@color/headingbg"
+            android:scaleType="center"
+            android:src="@drawable/compose" />
+        
+        <ImageView
+            android:id="@+id/imgInbox"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_gravity="center_vertical"
+            android:background="@color/headingbg"
+            android:scaleType="center"
+            android:src="@drawable/messages" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/actionBarOpener"
+        android:layout_width="wrap_content"
+        android:layout_height="50dp"
+        android:layout_alignParentBottom="true"
+        android:background="@color/headingbg"
+        android:orientation="horizontal"
+        android:visibility="gone" >
+
+        <ImageView
+            android:id="@+id/imgOpen"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_gravity="center_vertical"
+            android:background="@color/headingbg"
+            android:scaleType="center"
+            android:src="@drawable/back" />
+    </LinearLayout>
+
 </RelativeLayout>
-

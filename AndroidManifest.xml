@@ -37,7 +37,7 @@
         <activity
             android:name="com.rsu.jayanthsunchu.redditsuitedup.SubRedditsActivity"
             android:screenOrientation="portrait"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar"
+            
             android:windowSoftInputMode="stateHidden" >
         </activity>
         <activity
@@ -52,33 +52,33 @@
         <activity
             android:name="com.rsu.jayanthsunchu.redditsuitedup.LoginActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/DarkTheme"
+            
             android:windowSoftInputMode="stateHidden" >
         </activity>
         <activity
             android:name="com.rsu.jayanthsunchu.redditsuitedup.ProfileActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/DarkTheme" >
+            >
         </activity>
         <activity
             android:name="com.rsu.jayanthsunchu.redditsuitedup.CommentsAndLink"
             android:screenOrientation="portrait"
-            android:theme="@style/DarkTheme" >
+            >
         </activity>
         <activity
             android:name="com.rsu.jayanthsunchu.redditsuitedup.InboxActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/DarkTheme" >
+            >
         </activity>
         <activity
             android:name="com.rsu.jayanthsunchu.redditsuitedup.ReplyActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/DarkTheme" >
+            >
         </activity>
         <activity
             android:name="com.rsu.jayanthsunchu.redditsuitedup.SubmitActivity"
             android:screenOrientation="portrait"
-            android:theme="@android:style/Theme.Light.NoTitleBar" >
+            >
         </activity>
     </application>
 

@@ -7,7 +7,7 @@
     </style>
 
     <style name="WhiteTheme" parent="android:Theme.Translucent.NoTitleBar">
-        <item name="android:background">@color/whitebg</item>
+        <item name="android:background">@drawable/linkliststateswhite</item>
         <item name="android:textColor">@color/whitebgtext</item>
     </style>
 

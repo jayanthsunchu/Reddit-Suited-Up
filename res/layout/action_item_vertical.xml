@@ -1,7 +1,6 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
-    android:background="@drawable/border"
     android:clickable="true"
     android:focusable="true"
     android:orientation="horizontal" >
@@ -16,7 +15,7 @@
         android:id="@+id/tv_title"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:background="@color/darkbg"
+        android:background="@drawable/borderrect"
         android:gravity="center_vertical"
         android:paddingBottom="15dip"
         android:paddingLeft="15dip"

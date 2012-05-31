@@ -47,6 +47,7 @@ import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup.LayoutParams;
 import android.view.ViewConfiguration;
 import android.widget.AbsListView;
 import android.widget.AbsListView.OnScrollListener;
@@ -71,6 +72,10 @@ public class FrontPageActivity extends ListActivity {
 	String queryString;
 	boolean loadingMore;
 	AuthenticatePage authPage;
+	// linear layouts to maintain visibility of action bar - jc - may 30 2012
+	LinearLayout actionBar;
+	LinearLayout actionBarOpener;
+	LinearLayout mainBar;
 	public ProgressDialog progressDialog;
 	SharedPreferences redditSUPreferences;
 	SharedPreferences.Editor redditPrefEditor;
@@ -81,6 +86,8 @@ public class FrontPageActivity extends ListActivity {
 	ImageView imgRefresh;
 	ImageView imgSettings;
 	ImageView imgLoginAs;
+	ImageView imgClose;
+	ImageView imgOpen;
 	AsynchronousOptions asyncOperations;
 	Button btnSortBy;
 	FrontPageListAdapter adapter;
@@ -168,14 +175,46 @@ public class FrontPageActivity extends ListActivity {
 		}
 	};
 
+	private OnClickListener closeClickListener = new View.OnClickListener() {
+
+		@Override
+		public void onClick(View v) {
+			actionBar.setVisibility(8);
+			mainBar.setVisibility(8);
+			actionBarOpener.setVisibility(0);
+
+		}
+	};
+
+	private OnClickListener openClickListener = new View.OnClickListener() {
+
+		@Override
+		public void onClick(View v) {
+
+			actionBar.setVisibility(0);
+			mainBar.setVisibility(0);
+			actionBarOpener.setVisibility(8);
+
+		}
+	};
+
 	public void setUpViews() {
+		// action bar items and their onclick listeners and linear layouts to
+		// maintain visibility of action bar - jc - may 30 2012
+		actionBar = (LinearLayout) findViewById(R.id.actionBar);
+		actionBarOpener = (LinearLayout) findViewById(R.id.actionBarOpener);
+		mainBar = (LinearLayout)findViewById(R.id.subRedditMenu);
 		imgRefresh = (ImageView) findViewById(R.id.imgRefresh);
 		imgSettings = (ImageView) findViewById(R.id.imgSettings);
 		imgLoginAs = (ImageView) findViewById(R.id.imgLoginAs);
+		imgClose = (ImageView) findViewById(R.id.imgClose);
+		imgOpen = (ImageView) findViewById(R.id.imgOpen);
 
 		imgRefresh.setOnClickListener(refreshClickListener);
 		imgSettings.setOnClickListener(settingsClickListener);
 		imgLoginAs.setOnClickListener(loginClickListener);
+		imgClose.setOnClickListener(closeClickListener);
+		imgOpen.setOnClickListener(openClickListener);
 
 		progressDialog = new ProgressDialog(FrontPageActivity.this);
 
