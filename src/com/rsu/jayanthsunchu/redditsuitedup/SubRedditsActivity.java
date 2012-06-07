@@ -98,7 +98,6 @@ public class SubRedditsActivity extends Activity {
 
 		if (mySettings.getString("theme", "white").matches("white")) {
 			this.setTheme(R.style.WhiteTheme);
-
 		} else {
 			this.setTheme(R.style.DarkTheme);
 
