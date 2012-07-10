@@ -17,6 +17,7 @@ public class Constants {
 	public static final String CONST_UNREAD_URL = "http://www.reddit.com/message/unread/.json";
 	public static final String CONST_MESSAGES_URL = "http://www.reddit.com/message/messages/.json";
 	public static final String CONST_COMMENTREPLY_URL = "http://www.reddit.com/message/comments/.json";
+	public static final String CONST_BYID_URL = "http://www.reddit.com/by_id/";
 	public static final String CONST_SELFREPLY_URL = "http://www.reddit.com/message/selfreply/.json";
 	public static final String CONST_SENT_URL = "http://www.reddit.com/message/sent/.json";
 	public static final String CONST_MODERATOR_URL = "http://www.reddit.com/message/moderator/.json";
@@ -36,6 +37,7 @@ public class Constants {
 	public static final String CONST_SUBREDDITS_URL = "http://www.reddit.com/reddits/mine/.json";
 	public static final String PREFS_NAME = "MyPrefsFile";
 	public static final String CONST_REDDIT_URL = "http://www.reddit.com/";
+	public static final String CONST_REDDIT_URL2 = "http://www.reddit.com";
 	public static final String[] CONST_SUBREDDITS2 = { "User Profile",
 			"Search", "Refresh", "Inbox", "Submit" };
 	public static final String CONST_LOGIN_URL = "http://www.reddit.com/api/login/";

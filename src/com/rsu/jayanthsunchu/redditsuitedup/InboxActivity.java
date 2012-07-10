@@ -25,6 +25,8 @@ import android.app.ListActivity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.Configuration;
+import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -34,6 +36,7 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.rsu.jayanthsunchu.redditsuitedup.QuickAction.OnActionItemClickListener;
 
@@ -46,6 +49,7 @@ public class InboxActivity extends ListActivity {
 	private static final int ID_SENT = 11;
 	private static final int ID_MODERATOR = 12;
 	private static final int ID_REPLYTO = 14;
+	private static final int ID_PARENT = 15;
 	QuickAction sortBy;
 	public static String exceptionDownloading = "none";
 	InboxListAdapter adapter;
@@ -54,15 +58,56 @@ public class InboxActivity extends ListActivity {
 	LoadMessages loadMessage;
 	ArrayList<HashMap<String, String>> arrayList = new ArrayList<HashMap<String, String>>();
 	QuickAction listActions;
-
+	SharedPreferences redPrefs;
+	SharedPreferences.Editor redEditor;
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		applyTheme();
+		setContentView(R.layout.inbox_layout);
+		setUpViews();
+	}
+	
+	public void applyTheme() {
+		redPrefs = getSharedPreferences(Constants.PREFS_NAME, 0);
+		redEditor = redPrefs.edit();
+
+		if (redPrefs.getString("theme", "white").matches("white")) {
+			InboxActivity.this.setTheme(R.style.WhiteTheme);
+
+		} else {
+			InboxActivity.this.setTheme(R.style.DarkTheme);
+
+		}
+
+	}
+	
+
+	@Override
+	public void onConfigurationChanged(Configuration newConfig) {
+		super.onConfigurationChanged(newConfig);
+		applyTheme();
 		setContentView(R.layout.inbox_layout);
 		setUpViews();
 	}
 
+
 	public void setUpViews() {
+		
+		Drawable d;
+		if (redPrefs.getString("theme", "white").matches("white")) {
+			// FrontPageActivity.this.setTheme(R.style.WhiteTheme);
+			d = this.getResources().getDrawable(R.drawable.dividerwhite);
+			this.getListView().setDivider(d);
+
+		} else {
+			// FrontPageActivity.this.setTheme(R.style.DarkTheme);
+			d = this.getResources().getDrawable(R.drawable.dividerblack);
+			this.getListView().setDivider(d);
+
+		}
+		
+		this.getListView().setDividerHeight(1);
 		proBarLayout = (LinearLayout) findViewById(R.id.inboxLoadProgressBar);
 		txtOptions = (TextView) findViewById(R.id.txtOption);
 
@@ -86,12 +131,18 @@ public class InboxActivity extends ListActivity {
 		sortBy.addActionItem(submittedItem);
 		sortBy.addActionItem(likedItem);
 		sortBy.setOnActionItemClickListener(sortClick);
+		
+		
 
 		// list items actions menu - jc - may 09 2012
 		ActionItem replyToItem = new ActionItem(ID_REPLYTO, "reply",
 				getResources().getDrawable(R.drawable.reply));
-		listActions = new QuickAction(this, QuickAction.HORIZONTAL, false);
+		ActionItem viewParent = new ActionItem(ID_PARENT, "view parent", getResources().getDrawable(R.drawable.reply));
+		viewParent.setSticky(true);
+		listActions = new QuickAction(this, QuickAction.HORIZONTAL, true);
 		listActions.addActionItem(replyToItem);
+		listActions.addActionItem(viewParent);
+		
 		listActions.setOnActionItemClickListener(listActionClick);
 
 		loadMessage = new LoadMessages(InboxActivity.this,
@@ -122,6 +173,28 @@ public class InboxActivity extends ListActivity {
 				overridePendingTransition(R.anim.slide_top_to_bottom,
 						R.anim.shrink_from_top);
 			}
+			else if(actionId == ID_PARENT){
+				String something = "nope, chuck testa";
+				String[] splitContext = arrayList.get(position).get("context").split("/");
+				String context="";
+				for(int i=0; i<splitContext.length -1; i++){
+					context = context + splitContext[i] + "/";
+				}
+				String[] splitId = arrayList.get(position).get("parent_id").split("_");
+				
+				SharedPreferences sh =  InboxActivity.this.getSharedPreferences(Constants.PREFS_NAME, 0);
+				try {
+				JSONArray jjOb = getParentJson(Constants.CONST_REDDIT_URL2 + context +  splitId[1].trim() + "/.json",sh);
+				something = jjOb.toString();
+				}
+				catch(Exception ex){
+					ex.printStackTrace();
+				}
+				//Log.i("log_tag", context);
+				//Toast.makeText(source.getRespectiveView().getContext(), something, Toast.LENGTH_LONG).show();
+				source.setParentComment(something, InboxActivity.this);
+				//source.show(source.getRespectiveView());
+			}
 		}
 
 	};
@@ -131,7 +204,10 @@ public class InboxActivity extends ListActivity {
 		@Override
 		public void onItemClick(AdapterView<?> av, View v, int position, long id) {
 			listActions.setListViewPosition(position);
+			
 			listActions.show(v);
+			listActions.clearCurrentList(InboxActivity.this);
+			
 			listActions.setAnimStyle(QuickAction.ANIM_REFLECT);
 
 		}
@@ -303,6 +379,75 @@ public class InboxActivity extends ListActivity {
 
 		return jArray;
 	}
+	
+	public static JSONArray getParentJson(String url, SharedPreferences sh) {
+
+		String result = "";
+		JSONArray jArray = null;
+
+		StringBuilder builder = new StringBuilder();
+		DefaultHttpClient client = new DefaultHttpClient();
+		CookieStore bas = new BasicCookieStore();
+		// Log.i("status Code", sh.getString("redditsession", "fuck"));
+		BasicClientCookie ck = new BasicClientCookie("reddit_session",
+				sh.getString("redditsession", ""));
+		ck.setDomain(".reddit.com");
+		ck.setPath("/");
+		ck.setExpiryDate(null);
+		bas.addCookie(ck);
+		client.setCookieStore(bas);
+		client.getParams().setParameter(CoreProtocolPNames.USER_AGENT,
+				sh.getString("currentusername", "RSU"));
+		HttpGet httpGet = new HttpGet(url);
+		try {
+
+			// Log.i("cookieinfo", cookie + "4");
+			HttpResponse response = client.execute(httpGet);
+			StatusLine statusLine = response.getStatusLine();
+			int statusCode = statusLine.getStatusCode();
+			// Log.i("status Code", Integer.toString(statusCode));
+			if (statusCode == 200) {
+				HttpEntity entity = response.getEntity();
+				InputStream content = entity.getContent();
+
+				BufferedReader reader = new BufferedReader(
+						new InputStreamReader(content));
+				String line;
+				while ((line = reader.readLine()) != null) {
+					builder.append(line);
+				}
+				result = builder.toString();
+				Log.i("status Code", result);
+			} else {
+				exceptionDownloading = "Error downloading data.";
+				Log.e("faile", "Failed to download file" + "5");
+			}
+		} catch (ClientProtocolException e) {
+			exceptionDownloading = "Error downloading data.";
+			e.printStackTrace();
+		} catch (IOException e) {
+			exceptionDownloading = "Error downloading data.";
+			e.printStackTrace();
+		}
+		try {
+			if (result.matches("\\{\\}")) {
+				// handle exception
+				exceptionDownloading = "Error downloading data.";
+			} else
+				jArray = new JSONArray(result);
+			// SharedPreferences.Editor ed = sh.edit();
+			// ed.putInt("changedornot", 0);
+			// ed.commit();
+
+		} catch (JSONException e) {
+			exceptionDownloading = "Error downloading data.";
+			Log.e("log_tag", "Error parsing data " + e.toString() + "6");
+		}
+
+		return jArray;
+	}
+	
+	
 
 	// get data from api - jc - may 08 2012
 	protected String getDataFromApi(String url, SharedPreferences sh) {
@@ -330,6 +475,8 @@ public class InboxActivity extends ListActivity {
 				maps.put("subject", jsonObject.getString("subject"));
 				maps.put("context", jsonObject.getString("context"));
 				maps.put("subreddit", jsonObject.getString("subreddit"));
+				maps.put("parent_id", jsonObject.getString("parent_id"));
+				maps.put("context", jsonObject.getString("context"));
 				arrayList.add(maps);
 
 			}

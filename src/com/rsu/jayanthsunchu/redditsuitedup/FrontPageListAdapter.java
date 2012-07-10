@@ -232,6 +232,11 @@ public class FrontPageListAdapter extends BaseAdapter {
 									.contains("imgur.com/a"))
 							|| holderOnClick.currentDomain
 									.matches("quickmeme.com")) {
+						holderOnClick.gifView.clearHistory();
+						holderOnClick.gifView.clearView(); // To clear the
+															// webview before
+															// loading another
+															// one.
 						if (holderOnClick.currentDomain.matches("imgur.com")
 								&& holderOnClick.curl.contains("imgur.com/a")) {
 							// Imgur Galleries Opening as a link.
@@ -308,6 +313,11 @@ public class FrontPageListAdapter extends BaseAdapter {
 						}
 						holderOnClick.imgPreview.setVisibility(0);
 					} else if (!holderOnClick.selfText.matches("")) {
+						holderOnClick.gifView.clearHistory();
+						holderOnClick.gifView.clearView(); // To clear the
+															// webview before
+															// loading another
+															// one.
 						holderOnClick.previewLayout.setVisibility(0);
 						holderOnClick.txtSelftext.setVisibility(0);
 						holderOnClick.imgPreview.setVisibility(8);

@@ -2,7 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:background="#B8B8B8"
+  
     android:orientation="vertical" >
 
     <ListView
@@ -10,8 +10,8 @@
         android:layout_width="wrap_content"
         android:layout_height="fill_parent"
         android:layout_marginTop="50dip"
-        android:divider="@drawable/listitem_divider"
-        android:dividerHeight="1px" />
+        
+       />
 
     <LinearLayout
         android:id="@+id/heading"
@@ -41,7 +41,7 @@
         android:layout_height="fill_parent"
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="50dip"
-        android:background="#c1c1c1"
+        
         android:gravity="center_horizontal"
         android:orientation="horizontal"
         android:visibility="gone" >

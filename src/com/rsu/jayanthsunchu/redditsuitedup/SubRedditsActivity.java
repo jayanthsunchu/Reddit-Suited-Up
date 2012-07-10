@@ -52,6 +52,8 @@ public class SubRedditsActivity extends Activity {
 	SubRedditAdapter sub;
 	GetSubRedditsAsyncTask get;
 	ArrayList<HashMap<String, String>> subRedds = new ArrayList<HashMap<String, String>>();
+	HashMap<String, String> defaultHash = new HashMap<String, String>();
+
 	RedditorDB reddDb;
 	LoadSubReddits load;
 	LinearLayout proBar;
@@ -62,14 +64,20 @@ public class SubRedditsActivity extends Activity {
 	SharedPreferences.Editor myEditor;
 	TextView txtSubHeadingOne;
 	TextView txtSubHeadingTwo;
-	Button btnProfile;
-	Button btnInbox;
-	Button btnSubmit;
+	String loadMoreSubRedditFlag = "";
+
 	TextView txtFrontpage;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		for(int i=0; i<subRedds.size(); i++){
+			if(!subRedds.get(i).get("name").matches("frontpage")){
+				defaultHash.put("name", "frontpage");
+				subRedds.add(defaultHash);
+			}
+		}
+		
 		reddDb = new RedditorDB(SubRedditsActivity.this);
 		mySettings = getSharedPreferences(Constants.PREFS_NAME, 0);
 		myEditor = mySettings.edit();
@@ -86,15 +94,14 @@ public class SubRedditsActivity extends Activity {
 			myEditor.putString("usermodhash", current[2].trim());
 			myEditor.commit();
 		}
-		//applyTheme();
+		// applyTheme();
 		setContentView(R.layout.subreddits_layout);
 		setUpViews();
 
 	}
-	
+
 	public void applyTheme() {
-		mySettings = this
-				.getSharedPreferences(Constants.PREFS_NAME, 0);
+		mySettings = this.getSharedPreferences(Constants.PREFS_NAME, 0);
 
 		if (mySettings.getString("theme", "white").matches("white")) {
 			this.setTheme(R.style.WhiteTheme);
@@ -175,13 +182,22 @@ public class SubRedditsActivity extends Activity {
 				SharedPreferences sh = v.getContext().getSharedPreferences(
 						Constants.PREFS_NAME, 0);
 				SharedPreferences.Editor ed = sh.edit();
-				ed.putString("frontpageorwhat", "r/"
-						+ subRedds.get(position).get("name").toString().trim()
-						+ "/");
-				ed.commit();
-				ed.putString("sort", "");
-				ed.commit();
 
+				if (subRedds.get(position).get("name").toString().trim()
+						.matches("frontpage")) {
+					ed.putString("frontpageorwhat", "");
+					ed.commit();
+					ed.putString("sort", "");
+					ed.commit();
+				} else {
+					ed.putString("frontpageorwhat",
+							"r/"
+									+ subRedds.get(position).get("name")
+											.toString().trim() + "/");
+					ed.commit();
+					ed.putString("sort", "");
+					ed.commit();
+				}
 				// Intent backTo = new Intent(v.getContext(),
 				// FrontPageActivity.class);
 
@@ -262,52 +278,6 @@ public class SubRedditsActivity extends Activity {
 							"y u no select from the list?", Toast.LENGTH_LONG)
 							.show();
 
-				}
-			}
-
-		});
-
-		btnProfile = (Button) findViewById(R.id.btnProfile);
-		btnInbox = (Button) findViewById(R.id.btnInbox);
-		btnSubmit = (Button) findViewById(R.id.btnSubmit);
-
-		// Added Support for has_mail - jc - may 08 2012
-		checkMail(btnInbox, mySettings);
-		btnProfile.setOnClickListener(new OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-				if (mySettings.getInt("loggedinornot", 0) == 0) {
-					Toast.makeText(v.getContext(), "log in for this action.",
-							Toast.LENGTH_LONG).show();
-				} else {
-					Intent profile = new Intent(v.getContext(),
-							ProfileActivity.class);
-					profile.putExtra("username",
-							mySettings.getString("currentusername", ""));
-					finish();
-					startActivity(profile);
-				}
-			}
-
-		});
-
-		btnInbox.setOnClickListener(inboxClickListener);
-
-		btnSubmit.setOnClickListener(new OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-				if (mySettings.getInt("loggedinornot", 0) == 0) {
-					Toast.makeText(v.getContext(), "Feature yet to be added.",
-							Toast.LENGTH_LONG).show();
-				} else {
-					Toast.makeText(v.getContext(), "Feature yet to be added.",
-							Toast.LENGTH_LONG).show();
-//					Intent in = new Intent(SubRedditsActivity.this, SubmitActivity.class);
-//					finish();
-//					startActivity(in);
-					//overridePendingTransition(R.anim.rail, R.anim.rail);
 				}
 			}
 
@@ -418,20 +388,56 @@ public class SubRedditsActivity extends Activity {
 			myEditor.commit();
 			sub = new SubRedditAdapter(SubRedditsActivity.this, subRedds);
 			subList.setAdapter(sub);
+			if(!loadMoreSubRedditFlag.matches("")){
+				Thread loadMoreSubThread = new Thread(null, loadAllSubs);
+				loadMoreSubThread.start();
+			}
 			// Added Support for has_mail - jc - may 08 2012
-			checkMail(btnInbox, mySettings);
+			// checkMail(btnInbox, mySettings);
 
 		}
 
 		@Override
 		protected String doInBackground(Context... arg0) {
 
-			loadSubReddits(mySettings);
+			loadSubReddits(mySettings, Constants.CONST_SUBREDDITS_URL);
 			loadUserInformation(mySettings, myEditor);
 			return "Complete";
 		}
 
 	}
+	
+	private Runnable loadAllSubs = new Runnable(){
+
+		@Override
+		public void run() {
+			if(!loadMoreSubRedditFlag.matches("")){
+				
+				loadSubReddits(mySettings, Constants.CONST_SUBREDDITS_URL + "?after=" + loadMoreSubRedditFlag);
+				String subRs = "";
+				for (int i = 0; i < subRedds.size(); i++) {
+					subRs += subRedds.get(i).get("name").toString() + ",";
+				}
+				myEditor.putString("subreddits", subRs);
+				myEditor.commit();
+				runOnUiThread(updateSubs);
+			}
+		}
+		
+	};
+	
+	private Runnable updateSubs = new Runnable() {
+
+		@Override
+		public void run() {
+			sub = new SubRedditAdapter(SubRedditsActivity.this, subRedds);
+			subList.setAdapter(sub);
+			//sub.notifyDataSetChanged();
+			// TODO Auto-generated method stub
+			
+		}
+		
+	};
 
 	public void loadUserInformation(SharedPreferences sh,
 			SharedPreferences.Editor edit) {
@@ -522,11 +528,11 @@ public class SubRedditsActivity extends Activity {
 		return jArray;
 	}
 
-	protected void loadSubReddits(SharedPreferences shared) {
+	protected void loadSubReddits(SharedPreferences shared, String url) {
 		try {
 
 			JSONObject jsonReturned = getJSONfromURL(
-					Constants.CONST_SUBREDDITS_URL, currentCookie, shared);
+					url, currentCookie, shared);
 			JSONObject json2 = null;
 			JSONArray jArray = null;
 
@@ -544,6 +550,13 @@ public class SubRedditsActivity extends Activity {
 					map.put("display_name", jsonObject.getString("name"));
 					map.put("id", jsonObject.getString("id"));
 					subRedds.add(map);
+				}
+				loadMoreSubRedditFlag = "";
+				Log.i("Load More", json2.get("after").toString());
+				if(!json2.get("after").equals(null))
+				{
+					loadMoreSubRedditFlag =json2.get("after").toString();
+					Log.i("Load More", json2.get("after").toString());
 				}
 			} catch (Exception ex) {
 				Log.e("Log_tag", ex.toString() + "2");

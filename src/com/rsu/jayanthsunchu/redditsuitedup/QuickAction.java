@@ -62,7 +62,6 @@ public class QuickAction extends PopupWindows implements OnDismissListener {
 	public int listViewPosition = -1;
 	ArrayList<HashMap<String, String>> aList = new ArrayList<HashMap<String, String>>();
 
-	
 	public QuickAction(Context context) {
 		this(context, VERTICAL, false);
 	}
@@ -113,6 +112,29 @@ public class QuickAction extends PopupWindows implements OnDismissListener {
 		}
 
 	}
+	
+	ArrayList<HashMap<String, String>> parentCommentList = new ArrayList<HashMap<String, String>>();
+	
+
+	public void setParentComment(String text, Activity context) {
+	
+		
+		HashMap<String, String> hMap = new HashMap<String, String>();
+		hMap.put("name", text);
+		parentCommentList.add(hMap);
+		adapter = new LinksListAdapter(context, parentCommentList);
+		mListView = (ListView) mRootView.findViewById(R.id.linkList);
+		mListView.setVisibility(0);
+		mListView.setAdapter(adapter);
+	}
+	
+	
+	public void clearCurrentList(Activity context){
+		mListView = (ListView)mRootView.findViewById(R.id.linkList);
+		adapter = new LinksListAdapter(context, parentCommentList);
+		mListView.setAdapter(adapter);
+		mListView.setVisibility(8);
+	}
 
 	private OnItemClickListener linkClickListener = new OnItemClickListener() {
 
@@ -126,7 +148,6 @@ public class QuickAction extends PopupWindows implements OnDismissListener {
 
 	};
 
-	
 	public QuickAction(Context context, int orientation, boolean commentView) {
 		super(context);
 
@@ -148,12 +169,10 @@ public class QuickAction extends PopupWindows implements OnDismissListener {
 		mChildPos = 0;
 	}
 
-	
 	public ActionItem getActionItem(int index) {
 		return actionItems.get(index);
 	}
 
-	
 	public void setRootViewId(int id) {
 		mRootView = (ViewGroup) mInflater.inflate(id, null);
 		mTrack = (ViewGroup) mRootView.findViewById(R.id.tracks);
@@ -163,25 +182,20 @@ public class QuickAction extends PopupWindows implements OnDismissListener {
 
 		mScroller = (ScrollView) mRootView.findViewById(R.id.scroller);
 
-		
-		
 		mRootView.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT,
 				LayoutParams.WRAP_CONTENT));
 
 		setContentView(mRootView);
 	}
 
-	
 	public void setAnimStyle(int mAnimStyle) {
 		this.mAnimStyle = mAnimStyle;
 	}
 
-	
 	public void setOnActionItemClickListener(OnActionItemClickListener listener) {
 		mItemClickListener = listener;
 	}
 
-	
 	public void addActionItem(ActionItem action) {
 		actionItems.add(action);
 
@@ -275,7 +289,6 @@ public class QuickAction extends PopupWindows implements OnDismissListener {
 		return idForOperation;
 	}
 
-	
 	public void show(View anchor) {
 
 		preShow();
@@ -305,7 +318,6 @@ public class QuickAction extends PopupWindows implements OnDismissListener {
 		int screenWidth = mWindowManager.getDefaultDisplay().getWidth();
 		int screenHeight = mWindowManager.getDefaultDisplay().getHeight();
 
-		
 		if ((anchorRect.left + rootWidth) > screenWidth) {
 			xPos = anchorRect.left - (rootWidth - anchor.getWidth());
 			xPos = (xPos < 0) ? 0 : xPos;
@@ -353,7 +365,6 @@ public class QuickAction extends PopupWindows implements OnDismissListener {
 		mWindow.showAtLocation(anchor, Gravity.NO_GRAVITY, xPos, yPos);
 	}
 
-	
 	private void setAnimationStyle(int screenWidth, int requestedX,
 			boolean onTop) {
 		int arrowPos = requestedX - mArrowUp.getMeasuredWidth() / 2;
@@ -396,7 +407,6 @@ public class QuickAction extends PopupWindows implements OnDismissListener {
 		}
 	}
 
-	
 	private void showArrow(int whichArrow, int requestedX) {
 		final View showArrow = (whichArrow == R.id.arrow_up) ? mArrowUp
 				: mArrowDown;
@@ -418,7 +428,6 @@ public class QuickAction extends PopupWindows implements OnDismissListener {
 			hideArrow.setVisibility(View.INVISIBLE);
 	}
 
-	
 	public void setOnDismissListener(QuickAction.OnDismissListener listener) {
 		setOnDismissListener(this);
 
@@ -432,13 +441,11 @@ public class QuickAction extends PopupWindows implements OnDismissListener {
 		}
 	}
 
-	
 	public interface OnActionItemClickListener {
 		public abstract void onItemClick(QuickAction source, int pos,
 				int actionId);
 	}
 
-	
 	public interface OnDismissListener {
 		public abstract void onDismiss();
 	}

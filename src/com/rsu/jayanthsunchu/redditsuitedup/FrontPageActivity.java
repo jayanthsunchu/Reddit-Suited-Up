@@ -33,10 +33,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
+import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.text.Html;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.GestureDetector;
@@ -83,8 +85,8 @@ public class FrontPageActivity extends ListActivity {
 	TextView txtTitle;
 	LinearLayout progBar;
 	FrontPageTask fpTask;
-	ImageView imgRefresh;
-	ImageView imgSettings;
+	ImageView imgProfile;
+	ImageView imgInbox;
 	ImageView imgLoginAs;
 	ImageView imgClose;
 	ImageView imgOpen;
@@ -150,6 +152,50 @@ public class FrontPageActivity extends ListActivity {
 		}
 	};
 
+	private OnClickListener profileClickListener = new View.OnClickListener() {
+
+		@Override
+		public void onClick(View v) {
+			if (redditSUPreferences.getInt("loggedinornot", 0) == 0) {
+				Toast.makeText(v.getContext(), "log in for this action.",
+						Toast.LENGTH_LONG).show();
+			} else {
+				Intent profile = new Intent(v.getContext(),
+						ProfileActivity.class);
+				profile.putExtra("username",
+						redditSUPreferences.getString("currentusername", ""));
+				// finish();
+				startActivity(profile);
+			}
+
+		}
+	};
+
+	private OnClickListener inboxClickListener = new View.OnClickListener() {
+
+		@Override
+		public void onClick(View v) {
+			if (redditSUPreferences.getInt("loggedinornot", 0) == 0) {
+				Toast.makeText(v.getContext(), "log in for this action.",
+						Toast.LENGTH_LONG).show();
+			} else {
+				redditPrefEditor.putString("userinfopref",
+						redditSUPreferences.getString("userinfopref", "true")
+								.replace("true", "false"));// modified in order
+															// to lessen
+															// the
+				redditPrefEditor.commit(); // pain of
+				// orange inbox, still needs work - jc may
+				// 09 2012
+
+				Intent i = new Intent(v.getContext(), InboxActivity.class);
+				// finish();
+				startActivity(i);
+			}
+
+		}
+	};
+
 	private OnClickListener settingsClickListener = new View.OnClickListener() {
 
 		@Override
@@ -203,18 +249,13 @@ public class FrontPageActivity extends ListActivity {
 		// maintain visibility of action bar - jc - may 30 2012
 		actionBar = (LinearLayout) findViewById(R.id.actionBar);
 		actionBarOpener = (LinearLayout) findViewById(R.id.actionBarOpener);
-		mainBar = (LinearLayout)findViewById(R.id.subRedditMenu);
-		imgRefresh = (ImageView) findViewById(R.id.imgRefresh);
-		imgSettings = (ImageView) findViewById(R.id.imgSettings);
+		mainBar = (LinearLayout) findViewById(R.id.subRedditMenu);
+		imgProfile = (ImageView) findViewById(R.id.imgProfile);
+		imgInbox = (ImageView) findViewById(R.id.imgInbox);
+
 		imgLoginAs = (ImageView) findViewById(R.id.imgLoginAs);
 		imgClose = (ImageView) findViewById(R.id.imgClose);
 		imgOpen = (ImageView) findViewById(R.id.imgOpen);
-
-		imgRefresh.setOnClickListener(refreshClickListener);
-		imgSettings.setOnClickListener(settingsClickListener);
-		imgLoginAs.setOnClickListener(loginClickListener);
-		imgClose.setOnClickListener(closeClickListener);
-		imgOpen.setOnClickListener(openClickListener);
 
 		progressDialog = new ProgressDialog(FrontPageActivity.this);
 
@@ -223,6 +264,16 @@ public class FrontPageActivity extends ListActivity {
 		redditPrefEditor.commit();
 		redditPrefEditor.putBoolean("showdialog", false);
 		redditPrefEditor.commit();
+		redditPrefEditor.putString("favsubreddits", "frontpage, pics");
+		redditPrefEditor.commit();
+
+		imgProfile.setOnClickListener(profileClickListener);
+		imgInbox.setOnClickListener(inboxClickListener);
+
+		imgLoginAs.setOnClickListener(loginClickListener);
+		imgClose.setOnClickListener(closeClickListener);
+		imgOpen.setOnClickListener(openClickListener);
+
 		ActionItem nextItem = null;
 		ActionItem prevItem = null;
 		ActionItem searchItem = null;
@@ -257,32 +308,45 @@ public class FrontPageActivity extends ListActivity {
 
 		this.getListView().setDividerHeight(1);
 
-		Button btnSubReddits = new Button(FrontPageActivity.this);
-		btnSubReddits = (Button) findViewById(R.id.btnSubReddits);
+		//Button btnSubReddits = new Button(FrontPageActivity.this);
+		//btnSubReddits = (Button) findViewById(R.id.btnSubReddits);
 
 		txtTitle = (TextView) findViewById(R.id.txtTitle);
 
 		progBar = (LinearLayout) findViewById(R.id.subRedditP);
-
-		btnSubReddits.setOnClickListener(new OnClickListener() {
-
+		
+		txtTitle.setOnClickListener(new OnClickListener(){
 			@Override
-			public void onClick(View v) {
-				Intent subIntent = new Intent(v.getContext(),
-						SubRedditsActivity.class);
-
-				startActivityForResult(subIntent,
-						Constants.CONST_REFRESH_ACTIVITY_CODE);
-				overridePendingTransition(R.anim.slide_right, R.anim.slide_left);
+			public void onClick(View v){
+				Intent favIntent = new Intent(v.getContext(), SubRedditsActivity.class);
+				startActivityForResult(favIntent, Constants.CONST_REFRESH_ACTIVITY_CODE);
+				overridePendingTransition(R.anim.pump_bottom, R.anim.pump_top);
 			}
-
 		});
-		if (!redditSUPreferences.getString("frontpageorwhat", "").matches(""))
-			txtTitle.setText(redditSUPreferences.getString("frontpageorwhat",
-					"frontpage"));
-		else
-			txtTitle.setText("frontpage");
 
+//		btnSubReddits.setOnClickListener(new OnClickListener() {
+//
+//			@Override
+//			public void onClick(View v) {
+//				Intent subIntent = new Intent(v.getContext(),
+//						SubRedditsActivity.class);
+//
+//				startActivityForResult(subIntent,
+//						Constants.CONST_REFRESH_ACTIVITY_CODE);
+//				overridePendingTransition(R.anim.slide_right, R.anim.slide_left);
+//			}
+//
+//		});
+
+		String titleText = "";
+
+		if (!redditSUPreferences.getString("frontpageorwhat", "").matches(""))
+			titleText = redditSUPreferences.getString("frontpageorwhat",
+					"frontpage").toUpperCase();
+		else
+			titleText = "frontpage".toUpperCase();
+
+		txtTitle.setText(Html.fromHtml(titleText));
 		// quickaction
 
 		ActionItem newItem = new ActionItem(ID_NEW, "new", null);
@@ -316,32 +380,47 @@ public class FrontPageActivity extends ListActivity {
 			@Override
 			public void onItemClick(QuickAction source, int pos, int actionId) {
 				if (actionId == ID_HOT) {
+					redditPrefEditor.putString("sortingword", "hot");
+					redditPrefEditor.commit();
 					redditPrefEditor.putString("sort", "");
 					redditPrefEditor.commit();
 					finish();
 					startActivity(new Intent(getIntent()));
 
 				} else if (actionId == ID_NEW) {
+
+					redditPrefEditor.putString("sortingword", "new");
+					redditPrefEditor.commit();
 					redditPrefEditor.putString("sort", "/new");
 					redditPrefEditor.commit();
 					finish();
 					startActivity(new Intent(getIntent()));
 				} else if (actionId == ID_CONTRO) {
+
+					redditPrefEditor.putString("sortingword", "controversial");
+					redditPrefEditor.commit();
 					redditPrefEditor.putString("sort", "/controversial");
 					redditPrefEditor.commit();
 					finish();
 					startActivity(new Intent(getIntent()));
 				} else if (actionId == ID_TOP) {
+
+					redditPrefEditor.putString("sortingword", "top");
+					redditPrefEditor.commit();
 					redditPrefEditor.putString("sort", "/top");
 					redditPrefEditor.commit();
 					finish();
 					startActivity(new Intent(getIntent()));
 				} else if (actionId == ID_SAVED) {
+
 					if (redditSUPreferences.getInt("loggedinornot", 0) == 0) {
 						Toast.makeText(FrontPageActivity.this,
 								"log in for saved links", Toast.LENGTH_LONG)
 								.show();
 					} else {
+
+						redditPrefEditor.putString("sortingword", "saved");
+						redditPrefEditor.commit();
 						redditPrefEditor.putString(
 								"sort",
 								"/user/"
@@ -359,6 +438,9 @@ public class FrontPageActivity extends ListActivity {
 								"log in for submitted links", Toast.LENGTH_LONG)
 								.show();
 					} else {
+
+						redditPrefEditor.putString("sortingword", "submitted");
+						redditPrefEditor.commit();
 						redditPrefEditor.putString(
 								"sort",
 								"/user/"
@@ -377,6 +459,9 @@ public class FrontPageActivity extends ListActivity {
 								"log in for liked links", Toast.LENGTH_LONG)
 								.show();
 					} else {
+
+						redditPrefEditor.putString("sortingword", "liked");
+						redditPrefEditor.commit();
 						redditPrefEditor.putString(
 								"sort",
 								"/user/"
@@ -395,6 +480,9 @@ public class FrontPageActivity extends ListActivity {
 								"log in for disliked links", Toast.LENGTH_LONG)
 								.show();
 					} else {
+
+						redditPrefEditor.putString("sortingword", "disliked");
+						redditPrefEditor.commit();
 						redditPrefEditor.putString(
 								"sort",
 								"/user/"
@@ -413,6 +501,9 @@ public class FrontPageActivity extends ListActivity {
 								"log in for hidden links", Toast.LENGTH_LONG)
 								.show();
 					} else {
+
+						redditPrefEditor.putString("sortingword", "hidden");
+						redditPrefEditor.commit();
 						redditPrefEditor.putString(
 								"sort",
 								"/user/"
@@ -448,6 +539,9 @@ public class FrontPageActivity extends ListActivity {
 			}
 
 		});
+
+		btnSortBy.setText(redditSUPreferences.getString("sortingword", "hot")
+				.toUpperCase());
 
 		quickAction
 				.setOnActionItemClickListener(new OnActionItemClickListener() {

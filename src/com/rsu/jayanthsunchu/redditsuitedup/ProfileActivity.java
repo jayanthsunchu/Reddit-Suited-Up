@@ -27,10 +27,16 @@ import android.app.ListActivity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.Configuration;
+import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.AbsListView;
+import android.widget.AbsListView.OnScrollListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.LinearLayout;
@@ -47,17 +53,54 @@ public class ProfileActivity extends ListActivity {
 	public static String exceptionDownloading;
 	LoadUserLinks loadLinks;
 	GetUserInfoAsync getUseInfo;
+	String loadingMore = "";
+	String userName = "";
+	boolean loadingMoreFlag;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		applyTheme();
 		setContentView(R.layout.profile_layout);
 		setUpViews();
 	}
 
-	public void setUpViews() {
+	@Override
+	public void onConfigurationChanged(Configuration newConfig) {
+		super.onConfigurationChanged(newConfig);
+		applyTheme();
+		setContentView(R.layout.profile_layout);
+		setUpViews();
+	}
+
+	public void applyTheme() {
 		redPrefs = getSharedPreferences(Constants.PREFS_NAME, 0);
 		redEditor = redPrefs.edit();
+
+		if (redPrefs.getString("theme", "white").matches("white")) {
+			ProfileActivity.this.setTheme(R.style.WhiteTheme);
+
+		} else {
+			ProfileActivity.this.setTheme(R.style.DarkTheme);
+
+		}
+
+	}
+
+	public void setUpViews() {
+		Drawable d;
+		if (redPrefs.getString("theme", "white").matches("white")) {
+			// FrontPageActivity.this.setTheme(R.style.WhiteTheme);
+			d = this.getResources().getDrawable(R.drawable.dividerwhite);
+			getListView().setDivider(d);
+
+		} else {
+			// FrontPageActivity.this.setTheme(R.style.DarkTheme);
+			d = this.getResources().getDrawable(R.drawable.dividerblack);
+			getListView().setDivider(d);
+
+		}
+		this.getListView().setDividerHeight(1);
 		txtProfileHeading = (TextView) findViewById(R.id.txtProfile);
 		Bundle br = getIntent().getExtras();
 		if (br != null) {
@@ -68,6 +111,7 @@ public class ProfileActivity extends ListActivity {
 			loadLinks.execute(ProfileActivity.this);
 			getUseInfo = new GetUserInfoAsync(ProfileActivity.this, redPrefs,
 					proLayout, txtProfileHeading, br.getString("username"));
+			userName = br.getString("username");
 			getUseInfo.execute(ProfileActivity.this);
 		} else {
 			Toast.makeText(this, "Could not load profile, try again later.",
@@ -80,8 +124,7 @@ public class ProfileActivity extends ListActivity {
 	private OnItemClickListener profileItemClickListener = new OnItemClickListener() {
 
 		@Override
-		public void onItemClick(AdapterView<?> av, View v, int position,
-				long id) {
+		public void onItemClick(AdapterView<?> av, View v, int position, long id) {
 			// Intent comments = new Intent(
 			// ProfileActivity.this,
 			// CommentsAndLink.class);
@@ -116,7 +159,7 @@ public class ProfileActivity extends ListActivity {
 
 		@Override
 		protected String doInBackground(Context... arg0) {
-			getDataFromApi("", "", redPrefs, user);
+			getDataFromApi("", "", redPrefs, user, "");
 			return "COmplete";
 		}
 
@@ -129,7 +172,53 @@ public class ProfileActivity extends ListActivity {
 			if (exceptionDownloading.matches("none")) {
 				proAdapter = new ProfileAdapter(ProfileActivity.this,
 						returnList);
+				if (returnList.size() > 0) {
+					View footerView = ((LayoutInflater) ProfileActivity.this
+							.getSystemService(Context.LAYOUT_INFLATER_SERVICE))
+							.inflate(R.layout.neverendingfooter, null, false);
+					getListView().addFooterView(footerView);
+				} else {
+					View footerView = ((LayoutInflater) ProfileActivity.this
+							.getSystemService(Context.LAYOUT_INFLATER_SERVICE))
+							.inflate(R.layout.nothingfooter, null, false);
+					footerView.setOnClickListener(new OnClickListener() {
+						@Override
+						public void onClick(View v) {
+							finish();
+							startActivity(new Intent(getIntent()));
+						}
+					});
+					getListView().addFooterView(footerView);
+
+				}
 				setListAdapter(proAdapter);
+				getListView().setOnScrollListener(new OnScrollListener() {
+
+					@Override
+					public void onScroll(AbsListView av, int firstVisible,
+							int visibleCount, int totalCount) {
+
+						int lastInScreen = firstVisible + visibleCount;
+						if ((lastInScreen == totalCount) && !(loadingMoreFlag)) {
+							if (returnList.size() > 0) {
+
+								Thread loadMoreThread = new Thread(null,
+										loadMorePosts);
+								loadMoreThread.start();
+								// adapter.notifyDataSetChanged();
+							}
+						}
+
+					}
+
+					@Override
+					public void onScrollStateChanged(AbsListView arg0, int arg1) {
+						// TODO Auto-generated method stub
+
+					}
+
+				});
+				
 			} else {
 				Toast.makeText(ProfileActivity.this, exceptionDownloading,
 						Toast.LENGTH_LONG).show();
@@ -138,9 +227,38 @@ public class ProfileActivity extends ListActivity {
 		}
 	}
 
+	private Runnable loadMorePosts = new Runnable() {
+
+		@Override
+		public void run() {
+			loadingMoreFlag = true;
+			// TODO Auto-generated method stub
+			if (!loadingMore.matches("")) {
+				getDataFromApi("", "", redPrefs, userName.trim(), "?after="
+						+ loadingMore.trim());
+				runOnUiThread(updateProfileUI);
+			}
+
+		}
+
+	};
+
+	private Runnable updateProfileUI = new Runnable() {
+
+		@Override
+		public void run() {
+			loadingMoreFlag = false;
+			proAdapter.notifyDataSetChanged();
+			loadingMore = "";
+			// TODO Auto-generated method stub
+
+		}
+
+	};
+
 	protected void getDataFromApi(String url, String cookie,
-			SharedPreferences sh, String user) {
-		JSONObject json = getJSONfromURLUser(url, cookie, sh, user);
+			SharedPreferences sh, String user, String queryString) {
+		JSONObject json = getJSONfromURLUser(url, cookie, sh, user, queryString);
 		JSONObject json2 = null;
 		JSONArray jArray = null;
 
@@ -205,6 +323,10 @@ public class ProfileActivity extends ListActivity {
 					maps.put("kind", "t1");
 					returnList.add(maps);
 				}
+				loadingMore = "";
+
+				if (!json2.get("after").equals(null))
+					loadingMore = json2.get("after").toString();
 
 			}
 
@@ -218,7 +340,7 @@ public class ProfileActivity extends ListActivity {
 	}
 
 	public static JSONObject getJSONfromURLUser(String url, String cookie,
-			SharedPreferences sh, String user) {
+			SharedPreferences sh, String user, String queryString) {
 
 		String result = "";
 		JSONObject jArray = null;
@@ -237,7 +359,7 @@ public class ProfileActivity extends ListActivity {
 		client.getParams().setParameter(CoreProtocolPNames.USER_AGENT,
 				sh.getString("currentusername", "RSU"));
 		HttpGet httpGet = new HttpGet(Constants.CONST_USERPROFILE_URL
-				+ user.trim() + "/.json");
+				+ user.trim() + "/.json" + queryString);
 		try {
 
 			Log.i("cookieinfo", cookie + "4");

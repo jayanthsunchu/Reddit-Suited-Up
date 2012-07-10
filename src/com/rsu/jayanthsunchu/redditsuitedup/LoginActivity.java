@@ -125,9 +125,9 @@ public class LoginActivity extends Activity {
 						//Added condition to check for spaces in the username/password which is causing
 						//force closes - jc - May 16 2012
 						if (txtUserName.getText().toString().trim()
-								.matches(".*\\s*.*")
+								.matches(".*\\s+.*")
 								|| txtPassWord.getText().toString().trim()
-										.matches(".*\\s*.*")) {
+										.matches(".*\\s+.*")) {
 							Toast.makeText(v.getContext(),
 									"Remove the spaces in Username/Password fields.",
 									Toast.LENGTH_LONG).show();

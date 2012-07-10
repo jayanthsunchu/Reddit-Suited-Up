@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content" >
+
+    <ScrollView
+        android:id="@+id/scroller"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="50dip"
+        android:fadingEdgeLength="5dip"
+        android:scrollbars="none" >
+
+        <LinearLayout
+            android:id="@+id/tracks"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="0dip" />
+    </ScrollView>
+
+    <LinearLayout
+        android:layout_width="250dp"
+        android:layout_height="45dip"
+        android:layout_marginBottom="45dip"
+        android:orientation="horizontal"
+        android:layout_above="@+id/scroller" >
+
+        <AutoCompleteTextView
+            android:id="@+id/searchSubReddits"
+            android:layout_width="200dip"
+            
+            android:layout_height="fill_parent"
+            android:layout_gravity="center_vertical"
+            android:background="#6E6E6E"
+            android:completionThreshold="1" >
+        </AutoCompleteTextView>
+
+        <Button
+            android:id="@+id/btnGo"
+            android:layout_width="50dip"
+            android:layout_height="fill_parent"
+            android:layout_gravity="center_vertical|right"
+            android:background="@drawable/submenustates"
+            android:gravity="right"
+            android:padding="10dip"
+            android:text="GO"
+            android:textColor="#fff"
+            android:textStyle="bold" />
+    </LinearLayout>
+
+    <ImageView
+        android:id="@+id/arrow_up"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@android:color/transparent"
+        android:src="@drawable/arrow_up"
+        android:visibility="gone" />
+
+    <ImageView
+        android:id="@+id/arrow_down"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/scroller"
+        android:layout_marginTop="-14dip"
+        android:background="@android:color/transparent"
+        android:src="@drawable/arrow_down"
+        android:visibility="gone" />
+
+</RelativeLayout>

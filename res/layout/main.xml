@@ -20,38 +20,29 @@
         android:background="@color/headingbg"
         android:orientation="horizontal" >
 
-        <Button
-            android:id="@+id/btnSubReddits"
-            android:layout_width="wrap_content"
-            android:layout_height="fill_parent"
-            android:layout_weight="1"
-            android:background="@null"
-            android:padding="15dip"
-            android:text="OPTIONS"
-            android:textColor="#fff"
-            android:textStyle="bold" >
-        </Button>
-
         <TextView
             android:id="@+id/txtTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@android:color/transparent"
-            android:padding="5dip"
+            android:layout_weight="1"
+            android:padding="15dip"
             android:textColor="#fff"
             android:textStyle="bold" >
         </TextView>
-		
-        
-        
-        <ImageView
+
+        <Button
             android:id="@+id/btnSortBy"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:layout_gravity="center_vertical"
-            android:background="@color/headingbg"
-            android:scaleType="center"
-            android:src="@drawable/sortbyicon" />
+            android:layout_width="wrap_content"
+            android:layout_height="fill_parent"
+            android:background="@null"
+            android:gravity="right"
+            android:layout_weight="2"
+            android:padding="15dip"
+            android:text="SORT BY"
+            android:textColor="#fff"
+            android:textStyle="bold" >
+        </Button>
     </LinearLayout>
 
     <LinearLayout
@@ -101,24 +92,24 @@
             android:src="@drawable/login" />
 
         <ImageView
-            android:id="@+id/imgSettings"
+            android:id="@+id/imgProfile"
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:layout_gravity="center_vertical"
             android:layout_weight="1"
             android:background="@color/headingbg"
             android:scaleType="center"
-            android:src="@drawable/settings" />
+            android:src="@drawable/userdiff" />
 
         <ImageView
-            android:id="@+id/imgRefresh"
+            android:id="@+id/imgInbox"
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:layout_gravity="center_vertical"
             android:layout_weight="1"
             android:background="@color/headingbg"
             android:scaleType="center"
-            android:src="@drawable/refreshwhite" />
+            android:src="@drawable/envelope" />
 
         <ImageView
             android:id="@+id/imgSubmit"

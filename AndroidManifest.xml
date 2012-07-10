@@ -35,6 +35,12 @@
         </activity>
         <activity
             android:name="com.rsu.jayanthsunchu.redditsuitedup.SubRedditsActivity"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar"
+            android:windowSoftInputMode="stateHidden" >
+        </activity>
+        <activity
+            android:name="com.rsu.jayanthsunchu.redditsuitedup.FavSubRedditsActivity"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar"
             android:windowSoftInputMode="stateHidden" >
         </activity>
         <activity android:name="com.rsu.jayanthsunchu.redditsuitedup.SortEmActivity" >
@@ -53,7 +59,8 @@
         </activity>
         <activity android:name="com.rsu.jayanthsunchu.redditsuitedup.InboxActivity" >
         </activity>
-        <activity android:name="com.rsu.jayanthsunchu.redditsuitedup.ReplyActivity" >
+        <activity android:name="com.rsu.jayanthsunchu.redditsuitedup.ReplyActivity"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar" >
         </activity>
         <activity android:name="com.rsu.jayanthsunchu.redditsuitedup.SubmitActivity" >
         </activity>

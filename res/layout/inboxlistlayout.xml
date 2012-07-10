@@ -2,7 +2,6 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
-    android:background="@drawable/accountliststates"
     android:gravity="center_vertical"
     android:minHeight="30dip"
     android:orientation="vertical" >
@@ -11,7 +10,6 @@
         android:id="@+id/txtMessageBody"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textColor="#000"
         android:textSize="15sp" />
 
 </LinearLayout>
