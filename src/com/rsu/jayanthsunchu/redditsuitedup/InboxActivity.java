@@ -142,7 +142,7 @@ public class InboxActivity extends ListActivity {
 		listActions = new QuickAction(this, QuickAction.HORIZONTAL, true);
 		listActions.addActionItem(replyToItem);
 		listActions.addActionItem(viewParent);
-		
+		listActions.setOnDismissListener();
 		listActions.setOnActionItemClickListener(listActionClick);
 
 		loadMessage = new LoadMessages(InboxActivity.this,
