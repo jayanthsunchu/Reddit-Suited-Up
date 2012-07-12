@@ -206,6 +206,68 @@ public class InboxActivity extends ListActivity {
 		}
 
 	};
+	
+	//AsyncTask for showing parent comment or context in profile or inbox views 
+	public class ViewContextAsyncTask extends AsyncTask<Context, Integer, String> {
+		Activity context;
+		String flag;
+		QuickAction currentSource;
+		SharedPreferences thisPrefs;
+		int currentposition; 
+		ArrayList<HashMap<String, String>> currentList = new ArrayList<HashMap<String, String>>();
+		ArrayList<HashMap<String, String>> lstToPass = new ArrayList<HashMap<String, String>();
+		public ViewContextAsyncTask(Activity ctx, String whichFlag, QuickAction source, SharedPreferences sh, ArrayList<HashMap<String, String>> thisList){
+			this.context = ctx;
+			this.flag = whichFlag;
+			this.currentSource = source;
+			this.thisPrefs = sh;
+			this.currentList = thisList;
+			this.currentposition = source.getListViewPosition();
+			HashMap<String, String> defaultMap = new HashMap<String, String>();
+			defaultMap.put("name", "loading parent comment");
+			lstToPass.add(defaultMap);
+			
+		}
+		@Override
+		protected String doInBackground(Context... arg0) {
+			if(flag.matches("parent")){
+				String something = "nope, chuck testa";
+				String[] splitContext = currentList.get(currentposition).get("context").split("/");
+				String context="";
+				for(int i=0; i<splitContext.length -1; i++){
+					context = context + splitContext[i] + "/";
+				}
+				String[] splitId = arrayList.get(position).get("parent_id").split("_");
+				
+				SharedPreferences sh =  InboxActivity.this.getSharedPreferences(Constants.PREFS_NAME, 0);
+				try {
+				JSONArray jjOb = getParentJson(Constants.CONST_REDDIT_URL2 + context +  splitId[1].trim() + "/.json",sh);
+				something = jjOb.toString();
+				}
+				catch(Exception ex){
+					ex.printStackTrace();
+				}
+				if(!lstToPass.IsEmpty())
+				lstToPass.clear();
+				HashMap<String, String> hCurrent = new HashMap<String, String>();
+				hCurrent.put("name", something);
+				lstToPass.add(hCurrent);
+				//Log.i("log_tag", context);
+				//Toast.makeText(source.getRespectiveView().getContext(), something, Toast.LENGTH_LONG).show();
+				//source.setParentComment(something, InboxActivity.this);		
+				
+			}
+			
+			
+		}
+		protected void onPostExecute(String result){
+			source.setParentComment(lstToPass, context);
+			
+		}
+		protected void onPreExecute(){
+			source.setParentComment(lstToPass, context);
+		}
+	}
 
 	private OnItemClickListener inboxItemClick = new OnItemClickListener() {
 
