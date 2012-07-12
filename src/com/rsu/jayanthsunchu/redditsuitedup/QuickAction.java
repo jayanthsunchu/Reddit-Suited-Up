@@ -54,6 +54,8 @@ public class QuickAction extends PopupWindows implements OnDismissListener {
 	public static final int HORIZONTAL = 0;
 	public static final int VERTICAL = 1;
 	private LinksListAdapter adapter;
+	private ParentCommentAdapter pcAdapter;
+	private ViewContextAdapter vcAdapter;
 	public static final int ANIM_GROW_FROM_LEFT = 1;
 	public static final int ANIM_GROW_FROM_RIGHT = 2;
 	public static final int ANIM_GROW_FROM_CENTER = 3;
@@ -122,17 +124,17 @@ public class QuickAction extends PopupWindows implements OnDismissListener {
 		HashMap<String, String> hMap = new HashMap<String, String>();
 		hMap.put("name", text);
 		parentCommentList.add(hMap);
-		adapter = new LinksListAdapter(context, parentCommentList);
+		pcAdapter = new ParentCommentAdapter(context, parentCommentList);
 		mListView = (ListView) mRootView.findViewById(R.id.linkList);
 		mListView.setVisibility(0);
-		mListView.setAdapter(adapter);
+		mListView.setAdapter(pcAdapter);
 	}
 	
 	
 	public void clearCurrentList(Activity context){
 		mListView = (ListView)mRootView.findViewById(R.id.linkList);
-		adapter = new LinksListAdapter(context, parentCommentList);
-		mListView.setAdapter(adapter);
+		pcAdapter = new ParentCommentAdapter(context, parentCommentList);
+		mListView.setAdapter(pcAdapter);
 		mListView.setVisibility(8);
 	}
 
