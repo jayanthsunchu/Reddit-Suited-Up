@@ -82,6 +82,7 @@ public class FrontPageActivity extends ListActivity {
 	SharedPreferences redditSUPreferences;
 	SharedPreferences.Editor redditPrefEditor;
 	ArrayList<HashMap<String, String>> returnList = new ArrayList<HashMap<String, String>>();
+	ArrayList<String> recentlyVisitedLinks = new ArrayList<String>();
 	TextView txtTitle;
 	LinearLayout progBar;
 	FrontPageTask fpTask;
@@ -151,6 +152,29 @@ public class FrontPageActivity extends ListActivity {
 			startActivity(intent);
 		}
 	};
+	
+	public void checkMail(SharedPreferences myS) {
+		if (myS.contains("userinfopref")) {
+			String[] userPrefs = myS.getString("userinfopref",
+					"notpresent, notpresent").split(",");
+
+			if (userPrefs[0].matches("true")) {
+				imgInbox.setBackgroundColor(0xffff6600);
+				userPrefs[0] = "false";
+				String backToFalse = "";
+				for(int i=0; i<userPrefs.length; i++){
+					backToFalse = userPrefs[i]+",";
+				}
+				SharedPreferences.Editor nowEdit = myS.edit();
+				nowEdit.putString("userinfopref", backToFalse);
+			} else {
+				imgInbox.setBackgroundColor(0);
+			}
+
+		} else {
+			imgInbox.setBackgroundColor(0);
+		}
+	}
 
 	private OnClickListener profileClickListener = new View.OnClickListener() {
 
@@ -187,7 +211,7 @@ public class FrontPageActivity extends ListActivity {
 				redditPrefEditor.commit(); // pain of
 				// orange inbox, still needs work - jc may
 				// 09 2012
-
+				checkMail(redditSUPreferences);
 				Intent i = new Intent(v.getContext(), InboxActivity.class);
 				// finish();
 				startActivity(i);
@@ -266,6 +290,8 @@ public class FrontPageActivity extends ListActivity {
 		redditPrefEditor.commit();
 		redditPrefEditor.putString("favsubreddits", "frontpage, pics");
 		redditPrefEditor.commit();
+		redditPrefEditor.putString("recentlyvisited", "");
+		redditPrefEditor.commit();
 
 		imgProfile.setOnClickListener(profileClickListener);
 		imgInbox.setOnClickListener(inboxClickListener);
@@ -308,35 +334,37 @@ public class FrontPageActivity extends ListActivity {
 
 		this.getListView().setDividerHeight(1);
 
-		//Button btnSubReddits = new Button(FrontPageActivity.this);
-		//btnSubReddits = (Button) findViewById(R.id.btnSubReddits);
+		// Button btnSubReddits = new Button(FrontPageActivity.this);
+		// btnSubReddits = (Button) findViewById(R.id.btnSubReddits);
 
 		txtTitle = (TextView) findViewById(R.id.txtTitle);
 
 		progBar = (LinearLayout) findViewById(R.id.subRedditP);
-		
-		txtTitle.setOnClickListener(new OnClickListener(){
+
+		txtTitle.setOnClickListener(new OnClickListener() {
 			@Override
-			public void onClick(View v){
-				Intent favIntent = new Intent(v.getContext(), SubRedditsActivity.class);
-				startActivityForResult(favIntent, Constants.CONST_REFRESH_ACTIVITY_CODE);
+			public void onClick(View v) {
+				Intent favIntent = new Intent(v.getContext(),
+						SubRedditsActivity.class);
+				startActivityForResult(favIntent,
+						Constants.CONST_REFRESH_ACTIVITY_CODE);
 				overridePendingTransition(R.anim.pump_bottom, R.anim.pump_top);
 			}
 		});
 
-//		btnSubReddits.setOnClickListener(new OnClickListener() {
-//
-//			@Override
-//			public void onClick(View v) {
-//				Intent subIntent = new Intent(v.getContext(),
-//						SubRedditsActivity.class);
-//
-//				startActivityForResult(subIntent,
-//						Constants.CONST_REFRESH_ACTIVITY_CODE);
-//				overridePendingTransition(R.anim.slide_right, R.anim.slide_left);
-//			}
-//
-//		});
+		// btnSubReddits.setOnClickListener(new OnClickListener() {
+		//
+		// @Override
+		// public void onClick(View v) {
+		// Intent subIntent = new Intent(v.getContext(),
+		// SubRedditsActivity.class);
+		//
+		// startActivityForResult(subIntent,
+		// Constants.CONST_REFRESH_ACTIVITY_CODE);
+		// overridePendingTransition(R.anim.slide_right, R.anim.slide_left);
+		// }
+		//
+		// });
 
 		String titleText = "";
 
@@ -626,6 +654,8 @@ public class FrontPageActivity extends ListActivity {
 
 						} else if (actionId == ID_LINK) {
 							returnList.get(po).put("clicked", "true");
+
+							
 							adapter.notifyDataSetChanged();
 							Intent comments = new Intent(
 									FrontPageActivity.this,
@@ -772,6 +802,7 @@ public class FrontPageActivity extends ListActivity {
 
 	}
 
+
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode,
 			Intent intent) {
@@ -815,6 +846,33 @@ public class FrontPageActivity extends ListActivity {
 		}
 
 	};
+	
+	public void loadUserInformation(SharedPreferences sh,
+			SharedPreferences.Editor edit) {
+		try {
+			JSONObject jsonRe = SubRedditsActivity.getJSONfromURLMe("", "", sh);
+			JSONObject data = null;
+			if (!jsonRe.has("json")) {
+				data = jsonRe.getJSONObject("data");
+				edit.putString(
+						"userinfopref",
+						Boolean.toString(data.getBoolean("has_mail"))
+								+ ","
+								+ data.getString("name")
+								+ ","
+								+ Integer.toString(data.getInt("link_karma"))
+								+ ","
+								+ Integer.toString(data.getInt("comment_karma")));
+				edit.commit();
+
+			} else {
+
+			}
+
+		} catch (JSONException ex) {
+			ex.printStackTrace();
+		}
+	}
 
 	public class FrontPageTask extends AsyncTask<Context, Integer, String> {
 		SharedPreferences reddPrefs;
@@ -837,6 +895,8 @@ public class FrontPageActivity extends ListActivity {
 				getDataFromApi(reddPrefs.getString("frontpageorwhat", "")
 						+ reddPrefs.getString("sort", ""),
 						reddPrefs.getString("redditsession", ""), reddPrefs, "");
+				loadUserInformation(reddPrefs, reddPrefs.edit());
+				checkMail(reddPrefs);
 			} catch (Exception ex) {
 				Log.e("errorcode", ex.toString());
 			}

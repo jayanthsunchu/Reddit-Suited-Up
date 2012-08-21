@@ -3,16 +3,13 @@
     android:id="@+id/weblayout"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:background="#fff"
     android:orientation="vertical" >
 
-   
     <LinearLayout
         android:id="@+id/browserLayoutProgress"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:layout_gravity="center_horizontal"
-        android:background="#c1c1c1"
         android:gravity="center_horizontal"
         android:orientation="horizontal"
         android:visibility="gone" >

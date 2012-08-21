@@ -1,14 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="250dip"
-    android:layout_height="wrap_content" >
+    android:layout_width="280dip"
+    android:layout_height="wrap_content"
+    android:background="@android:color/transparent" >
 
     <ScrollView
         android:id="@+id/scroller"
-        android:layout_width="250dip"
+        android:layout_width="280dip"
         android:layout_height="75dip"
-        android:layout_marginTop="16dip"
-        android:background="@drawable/backblack"
+        android:layout_marginTop="22dip"
+         android:background="@drawable/border2"
         android:fadingEdgeLength="5dip"
         android:scrollbars="none" >
 
@@ -16,6 +17,8 @@
             android:id="@+id/tracks"
             android:layout_width="wrap_content"
             android:layout_height="75dip"
+            android:layout_gravity="center_horizontal"
+            android:background="#323232"
             android:orientation="horizontal"
             android:padding="10dip" />
     </ScrollView>
@@ -24,13 +27,15 @@
         android:id="@+id/arrow_up"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:background="@android:color/transparent"
         android:src="@drawable/arrow_up" />
 
     <ListView
         android:id="@+id/linkList"
-        android:layout_width="250dip"
+        android:layout_width="280dip"
         android:layout_height="wrap_content"
         android:layout_below="@id/scroller"
+        android:background="#323232"
         android:divider="@drawable/listitem_divider"
         android:dividerHeight="1dp" />
 
@@ -39,7 +44,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/linkList"
-        android:layout_marginTop="-14dip"
+        android:layout_marginTop="-12dip"
+        android:background="@android:color/transparent"
         android:src="@drawable/arrow_down" />
 
 </RelativeLayout>

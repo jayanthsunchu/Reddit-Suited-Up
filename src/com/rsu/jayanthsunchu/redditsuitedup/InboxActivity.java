@@ -21,6 +21,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.app.Activity;
 import android.app.ListActivity;
 import android.content.Context;
 import android.content.Intent;
@@ -35,9 +36,11 @@ import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.LinearLayout;
+import android.widget.PopupWindow.OnDismissListener;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.rsu.jayanthsunchu.redditsuitedup.FrontPageActivity.FrontPageTask;
 import com.rsu.jayanthsunchu.redditsuitedup.QuickAction.OnActionItemClickListener;
 
 public class InboxActivity extends ListActivity {
@@ -59,7 +62,10 @@ public class InboxActivity extends ListActivity {
 	ArrayList<HashMap<String, String>> arrayList = new ArrayList<HashMap<String, String>>();
 	QuickAction listActions;
 	SharedPreferences redPrefs;
+	TextView txtCompose;
 	SharedPreferences.Editor redEditor;
+	ViewContextAsyncTask vcTask;
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -67,7 +73,7 @@ public class InboxActivity extends ListActivity {
 		setContentView(R.layout.inbox_layout);
 		setUpViews();
 	}
-	
+
 	public void applyTheme() {
 		redPrefs = getSharedPreferences(Constants.PREFS_NAME, 0);
 		redEditor = redPrefs.edit();
@@ -81,7 +87,6 @@ public class InboxActivity extends ListActivity {
 		}
 
 	}
-	
 
 	@Override
 	public void onConfigurationChanged(Configuration newConfig) {
@@ -91,9 +96,8 @@ public class InboxActivity extends ListActivity {
 		setUpViews();
 	}
 
-
 	public void setUpViews() {
-		
+
 		Drawable d;
 		if (redPrefs.getString("theme", "white").matches("white")) {
 			// FrontPageActivity.this.setTheme(R.style.WhiteTheme);
@@ -106,11 +110,13 @@ public class InboxActivity extends ListActivity {
 			this.getListView().setDivider(d);
 
 		}
-		
+
 		this.getListView().setDividerHeight(1);
 		proBarLayout = (LinearLayout) findViewById(R.id.inboxLoadProgressBar);
 		txtOptions = (TextView) findViewById(R.id.txtOption);
-
+		txtCompose = (TextView)findViewById(R.id.compose);
+		
+		txtCompose.setOnClickListener(composeClickListener);
 		ActionItem newItem = new ActionItem(ID_ALL, "all", null);
 		ActionItem controItem = new ActionItem(ID_UNREAD, "unread", null);
 		ActionItem hotItem = new ActionItem(ID_MESSAGES, "messages", null);
@@ -131,13 +137,12 @@ public class InboxActivity extends ListActivity {
 		sortBy.addActionItem(submittedItem);
 		sortBy.addActionItem(likedItem);
 		sortBy.setOnActionItemClickListener(sortClick);
-		
-		
 
 		// list items actions menu - jc - may 09 2012
 		ActionItem replyToItem = new ActionItem(ID_REPLYTO, "reply",
 				getResources().getDrawable(R.drawable.reply));
-		ActionItem viewParent = new ActionItem(ID_PARENT, "view parent", getResources().getDrawable(R.drawable.reply));
+		ActionItem viewParent = new ActionItem(ID_PARENT, "view parent",
+				getResources().getDrawable(R.drawable.reply));
 		viewParent.setSticky(true);
 		listActions = new QuickAction(this, QuickAction.HORIZONTAL, true);
 		listActions.addActionItem(replyToItem);
@@ -156,16 +161,25 @@ public class InboxActivity extends ListActivity {
 
 	}
 	
-	private OnDismissListener inboxActionsDismiss = new OnDismissListener() {
+	private OnClickListener composeClickListener = new OnClickListener() {
 		@Override
-		public void onDismiss(){
-			
+		public void onClick(View v){
+			Intent composeIntent = new Intent(InboxActivity.this, ComposeActivity.class);
+			startActivity(composeIntent);
 		}
 		
-	}
-	
-	
-	//list actions click listener and list item click listener - jc - may 09 2012
+	};
+
+	private OnDismissListener inboxActionsDismiss = new OnDismissListener() {
+		@Override
+		public void onDismiss() {
+
+		}
+
+	};
+
+	// list actions click listener and list item click listener - jc - may 09
+	// 2012
 	private OnActionItemClickListener listActionClick = new OnActionItemClickListener() {
 
 		@Override
@@ -180,43 +194,31 @@ public class InboxActivity extends ListActivity {
 				startActivity(in);
 				overridePendingTransition(R.anim.slide_top_to_bottom,
 						R.anim.shrink_from_top);
-			}
-			else if(actionId == ID_PARENT){
-				String something = "nope, chuck testa";
-				String[] splitContext = arrayList.get(position).get("context").split("/");
-				String context="";
-				for(int i=0; i<splitContext.length -1; i++){
-					context = context + splitContext[i] + "/";
-				}
-				String[] splitId = arrayList.get(position).get("parent_id").split("_");
-				
-				SharedPreferences sh =  InboxActivity.this.getSharedPreferences(Constants.PREFS_NAME, 0);
-				try {
-				JSONArray jjOb = getParentJson(Constants.CONST_REDDIT_URL2 + context +  splitId[1].trim() + "/.json",sh);
-				something = jjOb.toString();
-				}
-				catch(Exception ex){
-					ex.printStackTrace();
-				}
-				//Log.i("log_tag", context);
-				//Toast.makeText(source.getRespectiveView().getContext(), something, Toast.LENGTH_LONG).show();
-				source.setParentComment(something, InboxActivity.this);
-				//source.show(source.getRespectiveView());
+			} else if (actionId == ID_PARENT) {
+
+				vcTask = new ViewContextAsyncTask(InboxActivity.this, "parent",
+						source, InboxActivity.this.getSharedPreferences(
+								Constants.PREFS_NAME, 0), arrayList);
+				vcTask.execute(InboxActivity.this);
 			}
 		}
 
 	};
-	
-	//AsyncTask for showing parent comment or context in profile or inbox views 
-	public class ViewContextAsyncTask extends AsyncTask<Context, Integer, String> {
+
+	// AsyncTask for showing parent comment or context in profile or inbox views
+	public class ViewContextAsyncTask extends
+			AsyncTask<Context, Integer, String> {
 		Activity context;
 		String flag;
 		QuickAction currentSource;
 		SharedPreferences thisPrefs;
-		int currentposition; 
+		int currentposition;
 		ArrayList<HashMap<String, String>> currentList = new ArrayList<HashMap<String, String>>();
-		ArrayList<HashMap<String, String>> lstToPass = new ArrayList<HashMap<String, String>();
-		public ViewContextAsyncTask(Activity ctx, String whichFlag, QuickAction source, SharedPreferences sh, ArrayList<HashMap<String, String>> thisList){
+		ArrayList<HashMap<String, String>> lstToPass = new ArrayList<HashMap<String, String>>();
+
+		public ViewContextAsyncTask(Activity ctx, String whichFlag,
+				QuickAction source, SharedPreferences sh,
+				ArrayList<HashMap<String, String>> thisList) {
 			this.context = ctx;
 			this.flag = whichFlag;
 			this.currentSource = source;
@@ -225,59 +227,105 @@ public class InboxActivity extends ListActivity {
 			this.currentposition = source.getListViewPosition();
 			HashMap<String, String> defaultMap = new HashMap<String, String>();
 			defaultMap.put("name", "loading parent comment");
+			defaultMap.put("author", "");
 			lstToPass.add(defaultMap);
-			
+
 		}
+
 		@Override
 		protected String doInBackground(Context... arg0) {
-			if(flag.matches("parent")){
-				String something = "nope, chuck testa";
-				String[] splitContext = currentList.get(currentposition).get("context").split("/");
-				String context="";
-				for(int i=0; i<splitContext.length -1; i++){
+			if (flag.matches("parent")) {
+				HashMap<String, String> something = new HashMap<String, String>();
+
+				String[] splitContext = currentList.get(currentposition)
+						.get("context").split("/");
+				String context = "";
+				for (int i = 0; i < splitContext.length - 1; i++) {
 					context = context + splitContext[i] + "/";
 				}
-				String[] splitId = arrayList.get(position).get("parent_id").split("_");
-				
-				SharedPreferences sh =  InboxActivity.this.getSharedPreferences(Constants.PREFS_NAME, 0);
+				String[] splitId = arrayList.get(currentposition)
+						.get("parent_id").split("_");
+
+				SharedPreferences sh = InboxActivity.this.getSharedPreferences(
+						Constants.PREFS_NAME, 0);
 				try {
-				JSONArray jjOb = getParentJson(Constants.CONST_REDDIT_URL2 + context +  splitId[1].trim() + "/.json",sh);
-				something = jjOb.toString();
-				}
-				catch(Exception ex){
+					JSONArray jjOb = getParentJson(Constants.CONST_REDDIT_URL2
+							+ context + splitId[1].trim() + "/.json", sh);
+					something = parseJSONParentComment(jjOb);
+				} catch (Exception ex) {
+					something.put("name", "no parent comment");
+					something.put("author", "");
+					
 					ex.printStackTrace();
 				}
-				if(!lstToPass.IsEmpty())
-				lstToPass.clear();
-				HashMap<String, String> hCurrent = new HashMap<String, String>();
-				hCurrent.put("name", something);
-				lstToPass.add(hCurrent);
-				//Log.i("log_tag", context);
-				//Toast.makeText(source.getRespectiveView().getContext(), something, Toast.LENGTH_LONG).show();
-				//source.setParentComment(something, InboxActivity.this);		
-				
+				if (!lstToPass.isEmpty())
+					lstToPass.clear();
+
+				lstToPass.add(something);
+				// Log.i("log_tag", context);
+				// Toast.makeText(source.getRespectiveView().getContext(),
+				// something, Toast.LENGTH_LONG).show();
+				// source.setParentComment(something, InboxActivity.this);
+
 			}
-			
-			
+
+			return "Complete";
+
 		}
-		protected void onPostExecute(String result){
-			source.setParentComment(lstToPass, context);
+
+		protected void onPostExecute(String result) {
+			currentSource.setParentComment(lstToPass, context);
+
+		}
+
+		protected void onPreExecute() {
+			currentSource.setParentComment(lstToPass, context);
+		}
+	}
+
+	private HashMap<String, String> parseJSONParentComment(JSONArray jsonResult) {
+		HashMap<String, String> toReturn = new HashMap<String, String>();
+		try {
+			JSONObject json2 = jsonResult.getJSONObject(1);
+
+			JSONObject s = json2.getJSONObject("data");
+			JSONArray arr = s.getJSONArray("children");
 			
+			for (int i = 0; i < arr.length(); i++) {
+				JSONObject json = arr.getJSONObject(i);
+				String st = json.getString("kind");
+				
+
+				if (st.matches("t1")) {
+
+					JSONObject jsonComment = json.getJSONObject("data");
+					toReturn.put("name",
+							Mdown.getHtml(jsonComment.getString("body")));
+					toReturn.put("author", jsonComment.getString("author"));
+					return toReturn;
+
+				}
+
+			}
+		} catch (JSONException ex) {
+			toReturn.put("name", "no parent");
+			toReturn.put("author", "");
+			
+			ex.printStackTrace();
+
 		}
-		protected void onPreExecute(){
-			source.setParentComment(lstToPass, context);
-		}
+		return toReturn;
 	}
 
 	private OnItemClickListener inboxItemClick = new OnItemClickListener() {
 
 		@Override
 		public void onItemClick(AdapterView<?> av, View v, int position, long id) {
-			listActions.setListViewPosition(position);
-			
-			listActions.show(v);
 			listActions.clearCurrentList(InboxActivity.this);
-			
+			listActions.setListViewPosition(position);
+
+			listActions.show(v);
+
 			listActions.setAnimStyle(QuickAction.ANIM_REFLECT);
 
 		}
@@ -449,7 +497,7 @@ public class InboxActivity extends ListActivity {
 
 		return jArray;
 	}
-	
+
 	public static JSONArray getParentJson(String url, SharedPreferences sh) {
 
 		String result = "";
@@ -516,8 +564,6 @@ public class InboxActivity extends ListActivity {
 
 		return jArray;
 	}
-	
-	
 
 	// get data from api - jc - may 08 2012
 	protected String getDataFromApi(String url, SharedPreferences sh) {

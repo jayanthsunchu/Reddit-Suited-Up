@@ -71,13 +71,7 @@ public class SubRedditsActivity extends Activity {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		for(int i=0; i<subRedds.size(); i++){
-			if(!subRedds.get(i).get("name").matches("frontpage")){
-				defaultHash.put("name", "frontpage");
-				subRedds.add(defaultHash);
-			}
-		}
-		
+
 		reddDb = new RedditorDB(SubRedditsActivity.this);
 		mySettings = getSharedPreferences(Constants.PREFS_NAME, 0);
 		myEditor = mySettings.edit();
@@ -258,8 +252,7 @@ public class SubRedditsActivity extends Activity {
 			public void onClick(View v) {
 				AutoCompleteTextView autoT = (AutoCompleteTextView) v.getTag();
 				if (!autoT.getText().toString().matches("")
-						&& autoT.getValidator().isValid(
-								autoT.getText().toString())) {
+						) {
 					SharedPreferences sh = v.getContext().getSharedPreferences(
 							Constants.PREFS_NAME, 0);
 					SharedPreferences.Editor ed = sh.edit();
@@ -388,7 +381,7 @@ public class SubRedditsActivity extends Activity {
 			myEditor.commit();
 			sub = new SubRedditAdapter(SubRedditsActivity.this, subRedds);
 			subList.setAdapter(sub);
-			if(!loadMoreSubRedditFlag.matches("")){
+			if (!loadMoreSubRedditFlag.matches("")) {
 				Thread loadMoreSubThread = new Thread(null, loadAllSubs);
 				loadMoreSubThread.start();
 			}
@@ -406,14 +399,15 @@ public class SubRedditsActivity extends Activity {
 		}
 
 	}
-	
-	private Runnable loadAllSubs = new Runnable(){
+
+	private Runnable loadAllSubs = new Runnable() {
 
 		@Override
 		public void run() {
-			if(!loadMoreSubRedditFlag.matches("")){
-				
-				loadSubReddits(mySettings, Constants.CONST_SUBREDDITS_URL + "?after=" + loadMoreSubRedditFlag);
+			if (!loadMoreSubRedditFlag.matches("")) {
+
+				loadSubReddits(mySettings, Constants.CONST_SUBREDDITS_URL
+						+ "?after=" + loadMoreSubRedditFlag);
 				String subRs = "";
 				for (int i = 0; i < subRedds.size(); i++) {
 					subRs += subRedds.get(i).get("name").toString() + ",";
@@ -423,20 +417,20 @@ public class SubRedditsActivity extends Activity {
 				runOnUiThread(updateSubs);
 			}
 		}
-		
+
 	};
-	
+
 	private Runnable updateSubs = new Runnable() {
 
 		@Override
 		public void run() {
 			sub = new SubRedditAdapter(SubRedditsActivity.this, subRedds);
 			subList.setAdapter(sub);
-			//sub.notifyDataSetChanged();
+			// sub.notifyDataSetChanged();
 			// TODO Auto-generated method stub
-			
+
 		}
-		
+
 	};
 
 	public void loadUserInformation(SharedPreferences sh,
@@ -531,14 +525,17 @@ public class SubRedditsActivity extends Activity {
 	protected void loadSubReddits(SharedPreferences shared, String url) {
 		try {
 
-			JSONObject jsonReturned = getJSONfromURL(
-					url, currentCookie, shared);
+			JSONObject jsonReturned = getJSONfromURL(url, currentCookie, shared);
 			JSONObject json2 = null;
 			JSONArray jArray = null;
 
 			try {
 				json2 = jsonReturned.getJSONObject("data");
 				jArray = json2.getJSONArray("children");
+				HashMap<String, String> defaultHashC = new HashMap<String, String>();
+				defaultHashC.put("name", "frontpage");
+				subRedds.add(defaultHashC);
+
 				for (int i = 0; i < jArray.length(); i++) {
 
 					JSONObject jsonObject1 = new JSONObject();
@@ -553,9 +550,8 @@ public class SubRedditsActivity extends Activity {
 				}
 				loadMoreSubRedditFlag = "";
 				Log.i("Load More", json2.get("after").toString());
-				if(!json2.get("after").equals(null))
-				{
-					loadMoreSubRedditFlag =json2.get("after").toString();
+				if (!json2.get("after").equals(null)) {
+					loadMoreSubRedditFlag = json2.get("after").toString();
 					Log.i("Load More", json2.get("after").toString());
 				}
 			} catch (Exception ex) {

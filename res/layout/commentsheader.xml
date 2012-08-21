@@ -3,8 +3,7 @@
     android:id="@+id/ccc"
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
-    android:background="#323232"
-    
+   
     android:minHeight="75dip"
     android:orientation="vertical" >
 
@@ -13,7 +12,7 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:padding="10dip"
-        android:textColor="#fefefe"
+        android:textColor="#606860"
         android:textSize="13sp"
         android:textStyle="bold" />
 
@@ -22,7 +21,7 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:padding="10dip"
-        android:textColor="#fff"
+        
         android:textSize="16sp" >
     </TextView>
 
@@ -31,7 +30,7 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:padding="10dip"
-        android:textColor="#fefefe"
+        android:textColor="#606860"
         android:textSize="13sp" />
     
     <LinearLayout

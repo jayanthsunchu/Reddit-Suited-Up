@@ -25,6 +25,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -78,6 +79,23 @@ public class CommentsAndLink extends Activity {
 	String vote = "";
 	String saved = "";
 
+	public void applyTheme() {
+		SharedPreferences redditSUPreferences = this.getSharedPreferences(
+				Constants.PREFS_NAME, 0);
+
+		redditSUPreferences = this
+				.getSharedPreferences(Constants.PREFS_NAME, 0);
+
+		if (redditSUPreferences.getString("theme", "white").matches("white")) {
+			CommentsAndLink.this.setTheme(R.style.WhiteTheme);
+
+		} else {
+			CommentsAndLink.this.setTheme(R.style.DarkTheme);
+
+		}
+
+	}
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -98,6 +116,7 @@ public class CommentsAndLink extends Activity {
 		}
 
 		sh = this.getSharedPreferences(Constants.PREFS_NAME, 0);
+		applyTheme();
 		awesomeAdapter = new AwesomePagerAdapter(url, id, selfText, author,
 				title, score, vote, saved, sh);
 		setUpViews();
@@ -395,6 +414,8 @@ public class CommentsAndLink extends Activity {
 
 					wv.getSettings().setLoadWithOverviewMode(true);
 					wv.getSettings().setUseWideViewPort(true);
+					wv.getSettings().setSupportZoom(true);
+					wv.getSettings().setBuiltInZoomControls(true);
 					wv.setScrollBarStyle(WebView.SCROLLBARS_OUTSIDE_OVERLAY);
 					wv.setScrollbarFadingEnabled(false);
 					lin.setVisibility(0);
@@ -419,6 +440,21 @@ public class CommentsAndLink extends Activity {
 						.findViewById(R.id.commentsLayoutProgress);
 				listView = (ListView) linLayout
 						.findViewById(R.id.commentsListView);
+
+				Drawable d;
+				if (sharedPrefs.getString("theme", "white").matches("white")) {
+					// FrontPageActivity.this.setTheme(R.style.WhiteTheme);
+					d = cxt.getResources().getDrawable(R.drawable.dividerwhite);
+					listView.setDivider(d);
+
+				} else {
+					// FrontPageActivity.this.setTheme(R.style.DarkTheme);
+					d = cxt.getResources().getDrawable(R.drawable.dividerblack);
+					listView.setDivider(d);
+
+				}
+				
+				listView.setDividerHeight(1);
 
 				ViewGroup header = (ViewGroup) ms2.inflate(
 						R.layout.commentsheader, null);

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.rsu.jayanthsunchu.redditsuitedup"
-    android:versionCode="6"
+    android:versionCode="9"
     android:versionName="1.3" >
 
     <uses-sdk
@@ -59,10 +59,15 @@
         </activity>
         <activity android:name="com.rsu.jayanthsunchu.redditsuitedup.InboxActivity" >
         </activity>
-        <activity android:name="com.rsu.jayanthsunchu.redditsuitedup.ReplyActivity"
+        <activity
+            android:name="com.rsu.jayanthsunchu.redditsuitedup.ReplyActivity"
             android:theme="@android:style/Theme.Translucent.NoTitleBar" >
         </activity>
         <activity android:name="com.rsu.jayanthsunchu.redditsuitedup.SubmitActivity" >
+        </activity>
+        <activity
+            android:name="com.rsu.jayanthsunchu.redditsuitedup.ComposeActivity"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar" >
         </activity>
     </application>
 

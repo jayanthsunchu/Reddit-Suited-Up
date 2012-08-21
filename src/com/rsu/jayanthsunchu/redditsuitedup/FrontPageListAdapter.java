@@ -233,7 +233,8 @@ public class FrontPageListAdapter extends BaseAdapter {
 							|| holderOnClick.currentDomain
 									.matches("quickmeme.com")) {
 						holderOnClick.gifView.clearHistory();
-						holderOnClick.gifView.clearView(); // To clear the
+						holderOnClick.gifView.clearView();
+						holderOnClick.gifView.setVisibility(8);// To clear the
 															// webview before
 															// loading another
 															// one.
@@ -314,7 +315,8 @@ public class FrontPageListAdapter extends BaseAdapter {
 						holderOnClick.imgPreview.setVisibility(0);
 					} else if (!holderOnClick.selfText.matches("")) {
 						holderOnClick.gifView.clearHistory();
-						holderOnClick.gifView.clearView(); // To clear the
+						holderOnClick.gifView.clearView();
+						holderOnClick.gifView.setVisibility(8);// To clear the
 															// webview before
 															// loading another
 															// one.

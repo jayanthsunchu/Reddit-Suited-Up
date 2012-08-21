@@ -29,8 +29,8 @@
         android:id="@+id/commentsListView"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:divider="@drawable/listitem_divider"
+        
         android:fastScrollEnabled="true"
-        android:dividerHeight="1dp" />
+        />
 
 </LinearLayout>

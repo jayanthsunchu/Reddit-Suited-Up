@@ -33,6 +33,18 @@
             android:textSize="16sp"
             android:textStyle="bold" >
         </TextView>
+        <TextView android:id="@+id/compose"
+            android:layout_width="wrap_content"
+             android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@android:color/transparent"
+            android:padding="5dip"
+            android:textColor="#fff"
+            android:text="Compose"
+            android:gravity="right"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            ></TextView>
     </LinearLayout>
 
     <LinearLayout

@@ -14,14 +14,14 @@ public class Constants {
 	
 	public static final String CONST_THEME_PREFS = "themeprefs";
 	// Url's related to messages
-	public static final String CONST_UNREAD_URL = "http://www.reddit.com/message/unread/.json";
-	public static final String CONST_MESSAGES_URL = "http://www.reddit.com/message/messages/.json";
-	public static final String CONST_COMMENTREPLY_URL = "http://www.reddit.com/message/comments/.json";
+	public static final String CONST_UNREAD_URL = "http://www.reddit.com/message/unread/.json?mark=true";
+	public static final String CONST_MESSAGES_URL = "http://www.reddit.com/message/messages/.json?mark=true";
+	public static final String CONST_COMMENTREPLY_URL = "http://www.reddit.com/message/comments/.json?mark=true";
 	public static final String CONST_BYID_URL = "http://www.reddit.com/by_id/";
-	public static final String CONST_SELFREPLY_URL = "http://www.reddit.com/message/selfreply/.json";
+	public static final String CONST_SELFREPLY_URL = "http://www.reddit.com/message/selfreply/.json?mark=true";
 	public static final String CONST_SENT_URL = "http://www.reddit.com/message/sent/.json";
-	public static final String CONST_MODERATOR_URL = "http://www.reddit.com/message/moderator/.json";
-	public static final String CONST_ALL_URL = "http://www.reddit.com/message/inbox/.json";
+	public static final String CONST_MODERATOR_URL = "http://www.reddit.com/message/moderator/.json?mark=true";
+	public static final String CONST_ALL_URL = "http://www.reddit.com/message/inbox/.json?mark=true";
 
 	public static final String CONST_ALLUSER_INFO = "http://www.reddit.com/user/";
 	public static final String CONST_REDDITS_URL = "http://www.reddit.com/reddits/.json";
@@ -41,7 +41,7 @@ public class Constants {
 	public static final String[] CONST_SUBREDDITS2 = { "User Profile",
 			"Search", "Refresh", "Inbox", "Submit" };
 	public static final String CONST_LOGIN_URL = "http://www.reddit.com/api/login/";
-	public static final String[] CONST_SUBREDDITS = { "0x10c", "1000words",
+	public static final String[] CONST_SUBREDDITS = { "frontpage","0x10c", "1000words",
 			"2XLookbook", "300songs", "3DS", "3dsFCswap", "412012", "4chan",
 			"4sentencegamereviews", "501st", "5starmusic", "90sTrees",
 			"911truth", "99percentparty", "aaaaaatheismmmmmmmmmm", "abourne",

@@ -118,13 +118,11 @@ public class QuickAction extends PopupWindows implements OnDismissListener {
 	ArrayList<HashMap<String, String>> parentCommentList = new ArrayList<HashMap<String, String>>();
 	
 
-	public void setParentComment(String text, Activity context) {
+	public void setParentComment(ArrayList<HashMap<String, String>> myList, Activity context) {
 	
 		
-		HashMap<String, String> hMap = new HashMap<String, String>();
-		hMap.put("name", text);
-		parentCommentList.add(hMap);
-		pcAdapter = new ParentCommentAdapter(context, parentCommentList);
+		
+		pcAdapter = new ParentCommentAdapter(context, myList);
 		mListView = (ListView) mRootView.findViewById(R.id.linkList);
 		mListView.setVisibility(0);
 		mListView.setAdapter(pcAdapter);
@@ -132,6 +130,8 @@ public class QuickAction extends PopupWindows implements OnDismissListener {
 	
 	
 	public void clearCurrentList(Activity context){
+		if(!parentCommentList.isEmpty())
+		parentCommentList.clear();
 		mListView = (ListView)mRootView.findViewById(R.id.linkList);
 		pcAdapter = new ParentCommentAdapter(context, parentCommentList);
 		mListView.setAdapter(pcAdapter);

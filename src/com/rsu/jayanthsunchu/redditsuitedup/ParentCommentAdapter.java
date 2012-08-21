@@ -8,6 +8,7 @@ import com.rsu.jayanthsunchu.redditsuitedup.R;
 
 import android.app.Activity;
 import android.content.Context;
+import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -53,20 +54,25 @@ public class ParentCommentAdapter extends BaseAdapter {
 			convertView = mInflater.inflate(R.layout.parentcommentlayout, null);
 			vh = new ViewHolder();
 			vh.txt = (TextView)convertView.findViewById(R.id.parentcomment);
-
+			vh.txtAuthor = (TextView)convertView.findViewById(R.id.parentauthor);
+		
 			convertView.setTag(vh);
 		} else {
 			vh = (ViewHolder) convertView.getTag();
 		}
-		if(returnList.size() > 0)
-		vh.txt.setText(returnList.get(position).get("name"));
-
+		if(returnList.size() > 0){
+		vh.txt.setText(Html.fromHtml(returnList.get(position).get("name")));
+		if(!returnList.get(position).get("author").matches(""))
+		vh.txtAuthor.setText("by: " + returnList.get(position).get("author"));
+		
+		}
 		return convertView;
 	}
 
 	public class ViewHolder {
 		TextView txt;
-
+		TextView txtAuthor;
+		
 	}
 
 }

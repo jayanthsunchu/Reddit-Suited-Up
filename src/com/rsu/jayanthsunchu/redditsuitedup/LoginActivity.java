@@ -126,10 +126,9 @@ public class LoginActivity extends Activity {
 						//force closes - jc - May 16 2012
 						if (txtUserName.getText().toString().trim()
 								.matches(".*\\s+.*")
-								|| txtPassWord.getText().toString().trim()
-										.matches(".*\\s+.*")) {
+								) {
 							Toast.makeText(v.getContext(),
-									"Remove the spaces in Username/Password fields.",
+									"Remove the spaces in Username field.",
 									Toast.LENGTH_LONG).show();
 						} else {
 							authPage = new AuthenticatePage(txtUserName

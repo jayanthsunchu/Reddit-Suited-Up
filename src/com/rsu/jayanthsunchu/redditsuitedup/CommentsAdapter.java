@@ -9,14 +9,14 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Rect;
 import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
+import android.opengl.Visibility;
 import android.text.Html;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.View.OnLongClickListener;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.BaseAdapter;
@@ -32,6 +32,7 @@ public class CommentsAdapter extends BaseAdapter {
 	private int COMMENTDOWNVOTE = 1;
 	private int COMMENTUSER = 2;
 	private int COMMENTREPLY = 3;
+	private int TOGGLE = 4;
 	Node<HashMap<String, String>> arrayList2;
 	ArrayList<HashMap<String, String>> arrayList;
 	ViewHolder currentViewHolder;
@@ -69,6 +70,8 @@ public class CommentsAdapter extends BaseAdapter {
 				.getResources().getDrawable(R.drawable.reply));
 		ActionItem eraseItem = new ActionItem(COMMENTDOWNVOTE, "", context
 				.getResources().getDrawable(R.drawable.downvotewhite));
+		
+		ActionItem toggleVisibility = new ActionItem(TOGGLE, "", context.getResources().getDrawable(R.drawable.hideorshow));
 
 		// create QuickAction. Use QuickAction.VERTICAL or
 		// QuickAction.HORIZONTAL param to define layout
@@ -81,6 +84,7 @@ public class CommentsAdapter extends BaseAdapter {
 
 		quickAction.addActionItem(infoItem);
 		quickAction.addActionItem(eraseItem);
+		quickAction.addActionItem(toggleVisibility);
 
 		quickAction.setOnActionItemClickListener(actionItemClick);
 
@@ -98,16 +102,16 @@ public class CommentsAdapter extends BaseAdapter {
 					} else {
 						TextView txtSource = (TextView) source
 								.getRespectiveView();
-						//added for a better upvote/downvote graphic - jc - may 28 2012
-						BitmapDrawable dd = (BitmapDrawable)context.getResources().getDrawable(
-								R.drawable.upvoteg);
-						dd.setBounds(0, 0, txtSource.getWidth(), dd.getIntrinsicHeight());
-						
+						// added for a better upvote/downvote graphic - jc - may
+						// 28 2012
+						BitmapDrawable dd = (BitmapDrawable) context
+								.getResources().getDrawable(R.drawable.upvoteg);
+						dd.setBounds(0, 0, txtSource.getWidth(),
+								dd.getIntrinsicHeight());
+
 						dd.setGravity(Gravity.LEFT);
-						
-						
-						txtSource.setCompoundDrawables(null,
-								dd, null, null);
+
+						txtSource.setCompoundDrawables(null, dd, null, null);
 
 						// txtSource
 						// .setBackgroundResource(R.drawable.orangelayout);
@@ -131,17 +135,20 @@ public class CommentsAdapter extends BaseAdapter {
 					} else {
 						TextView txtSource = (TextView) source
 								.getRespectiveView();
-						//Bitmap b = BitmapFactory.decodeResource(context.getResources(), context.getResources().getDrawable(R.drawable.downvoteg));
-						//added for a better upvote/downvote graphic - jc - may 28 2012
-						BitmapDrawable dd = (BitmapDrawable)context.getResources().getDrawable(
-								R.drawable.downvoteg);
-						dd.setBounds(0, 0, txtSource.getWidth(), dd.getIntrinsicHeight());
-						
+						// Bitmap b =
+						// BitmapFactory.decodeResource(context.getResources(),
+						// context.getResources().getDrawable(R.drawable.downvoteg));
+						// added for a better upvote/downvote graphic - jc - may
+						// 28 2012
+						BitmapDrawable dd = (BitmapDrawable) context
+								.getResources().getDrawable(
+										R.drawable.downvoteg);
+						dd.setBounds(0, 0, txtSource.getWidth(),
+								dd.getIntrinsicHeight());
+
 						dd.setGravity(Gravity.LEFT);
-						
-						
-						txtSource.setCompoundDrawables(null,
-								dd, null, null);
+
+						txtSource.setCompoundDrawables(null, dd, null, null);
 						// txtSource.setBackgroundResource(R.drawable.bluelayout);
 						asyncOperations = new AsynchronousOptions(source
 								.getRespectiveView().getContext(), "t1_"
@@ -190,6 +197,26 @@ public class CommentsAdapter extends BaseAdapter {
 					}
 				}
 			}
+			else if(actionId == TOGGLE){
+				if(source.getRespectiveView() != null){
+					TextView current = (TextView)source.getRespectiveView();
+					LinearLayout linCurrent = (LinearLayout)current.getParent();
+					LinearLayout.LayoutParams lp = (LinearLayout.LayoutParams) linCurrent
+							.getLayoutParams();
+					if (lp.height != 30) {
+						
+				
+						linCurrent.setLayoutParams(new LinearLayout.LayoutParams(
+								LinearLayout.LayoutParams.WRAP_CONTENT, 30));
+					} else {
+						
+						linCurrent.setLayoutParams(new LinearLayout.LayoutParams(
+								LinearLayout.LayoutParams.WRAP_CONTENT,
+								LinearLayout.LayoutParams.WRAP_CONTENT));
+
+					}
+				}
+			}
 		}
 
 	};
@@ -205,8 +232,8 @@ public class CommentsAdapter extends BaseAdapter {
 
 			LinearLayout presentLayout = new LinearLayout(context);
 			presentLayout.setOrientation(1);
-		
-			//presentLayout.setBackgroundResource(R.drawable.rounded_corners);
+
+			// presentLayout.setBackgroundResource(R.drawable.rounded_corners);
 			presentLayout.setLayoutParams(new LayoutParams(
 					LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT));
 			txt.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT,
@@ -233,6 +260,7 @@ public class CommentsAdapter extends BaseAdapter {
 					arrayList.get(i).get("author") });
 
 			txt.setOnClickListener(commentClickListener);
+			//txt.setOnLongClickListener(toggleCommentListener);
 			presentLayout.addView(txt);
 
 			presentLayout = recursiveFuckFunction(presentList.get(i)
@@ -253,6 +281,32 @@ public class CommentsAdapter extends BaseAdapter {
 			quickAction.setCommentAuthor(tag[2]);
 			quickAction.show(v);
 			quickAction.setAnimStyle(QuickAction.ANIM_GROW_FROM_CENTER);
+		}
+
+	};
+
+	private OnLongClickListener toggleCommentListener = new OnLongClickListener() {
+
+		@Override
+		public boolean onLongClick(View v) {
+			TextView current = (TextView) v;
+			LinearLayout linCurrent = (LinearLayout) current.getParent();
+			LinearLayout.LayoutParams lp = (LinearLayout.LayoutParams) linCurrent
+					.getLayoutParams();
+			if (lp.height != 35) {
+
+				linCurrent.setLayoutParams(new LinearLayout.LayoutParams(
+						LinearLayout.LayoutParams.WRAP_CONTENT, 35));
+			} else {
+
+				linCurrent.setLayoutParams(new LinearLayout.LayoutParams(
+						LinearLayout.LayoutParams.WRAP_CONTENT,
+						LinearLayout.LayoutParams.WRAP_CONTENT));
+
+			}
+			
+
+			return false;
 		}
 
 	};
@@ -362,6 +416,7 @@ public class CommentsAdapter extends BaseAdapter {
 						currentNode.getData().get("author") });
 
 				txt.setOnClickListener(commentClickListener);
+				//txt.setOnLongClickListener(toggleCommentListener);
 				currentLayout.addView(txt);
 				// currentLayout.setId(ranGenerator.nextInt());
 				if (currentNode.getNumberOfChildren() > 0) {
